@@ -20,7 +20,7 @@ db_connection = db.connect_to_database()
 
 @app.route('/')
 def root():
-    return render_template("main.j2")
+    return render_template("home.html")
 
 
 @app.route('/exercises')
