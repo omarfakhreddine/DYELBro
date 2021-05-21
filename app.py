@@ -10,6 +10,13 @@ SELECT:
 SELECT [columns] FROM [table] (WHERE [condition]) (ORDER BY [column] ASC/DESC) (LIMIT [num])
 """
 
+"""
+TODO: figure out gunicorn
+TODO: write queries for each table/form
+TODO: write routes
+TODO: update jinja templates and links on pages to proper routes
+"""
+
 # Configuration
 
 app = Flask(__name__)
