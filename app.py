@@ -44,7 +44,7 @@ def exercises():
     results = cursor.fetchall()
 
     # Sends the results back to the web browser.
-    return render_template("bsg.j2", exercises=results)
+    return render_template("home.j2", exercises=results)
 
     # Listener
 if __name__ == "__main__":
