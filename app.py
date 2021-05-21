@@ -24,7 +24,7 @@ def root():
 
 
 @app.route('/exercises')
-def bsg_people():
+def exercises():
     # Write the query and save it to a variable
     query = "SELECT * FROM Exercises;"
 
@@ -44,7 +44,7 @@ def bsg_people():
     results = cursor.fetchall()
 
     # Sends the results back to the web browser.
-    return render_template("bsg.j2", bsg_people=results)
+    return render_template("bsg.j2", exercises=results)
 
     # Listener
 if __name__ == "__main__":
