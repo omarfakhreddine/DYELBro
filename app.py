@@ -23,10 +23,10 @@ def root():
     return render_template("main.j2")
 
 
-@app.route('/bsg-people')
+@app.route('/exercises')
 def bsg_people():
     # Write the query and save it to a variable
-    query = "SELECT * FROM bsg_people;"
+    query = "SELECT * FROM Exercises;"
 
     # The way the interface between MySQL and Flask works is by using an
     # object called a cursor. Think of it as the object that acts as the
@@ -48,7 +48,7 @@ def bsg_people():
 
     # Listener
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 4081))
+    port = int(os.environ.get('PORT', 4082))
     #                                 ^^^^
     #              You can replace this number with any valid port
 
