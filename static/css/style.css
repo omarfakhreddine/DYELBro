@@ -1,0 +1,56 @@
+.title {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 75%;
+  font-size: 15vw;
+}
+
+.small-title {
+  margin-top: 0;
+  height: 75px;
+  width: 100%;
+  font-size: 10vw;
+  text-align: center;
+}
+
+.horizontal-menu {
+  height: 75px;
+  max-width: 100%;
+  background-color: black;
+  overflow: hidden;
+  border: 6px solid red;
+  border-radius: 30px;
+}
+
+.horizontal-menu a {
+  margin: auto;
+  width: 25%;
+  height: 100%;
+  float: left;
+  color: white;
+  text-align: center;
+  font-size: 3vw;
+}
+
+.horizontal-menu a:hover {
+  border-radius: 30px;
+  background-color: grey;
+  text-shadow: 1px 1px red;
+}
+
+.horizontal-menu a:active {
+  border-radius: 30px;
+  background-color: red;
+  text-shadow: 1px 1px red;
+}
+
+.description {
+  height: 50px;
+  text-align: center;
+  max-width: 75%;
+  margin: auto;
+  margin-top: 30px;
+}
+
+
