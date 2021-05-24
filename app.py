@@ -12,8 +12,7 @@ SELECT [columns] FROM [table] (WHERE [condition]) (ORDER BY [column] ASC/DESC) (
 
 """
 TODO: write queries for each table/form
-TODO: write routes
-TODO: update jinja templates and links on pages to proper routes
+TODO: create for loops in templates to handle query results
 """
 
 # Configuration
