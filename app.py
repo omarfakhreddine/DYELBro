@@ -11,7 +11,6 @@ SELECT [columns] FROM [table] (WHERE [condition]) (ORDER BY [column] ASC/DESC) (
 """
 
 """
-TODO: figure out gunicorn
 TODO: write queries for each table/form
 TODO: write routes
 TODO: update jinja templates and links on pages to proper routes
@@ -27,19 +26,19 @@ db_connection = db.connect_to_database()
 
 @app.route('/')
 def root():
-    return render_template("home.html")
+    return render_template("home.j2")
 
 
 @app.route('/exercises')
 def exercises():
     # Write the query and save it to a variable
-    query = "SELECT * FROM Exercises;"
+    #query = "SELECT * FROM Exercises;"
 
     # The way the interface between MySQL and Flask works is by using an
     # object called a cursor. Think of it as the object that acts as the
     # person typing commands directly into the MySQL command line and
     # reading them back to you when it gets results
-    cursor = db.execute_query(db_connection=db_connection, query=query)
+    #cursor = db.execute_query(db_connection=db_connection, query=query)
 
     # The cursor.fetchall() function tells the cursor object to return all
     # the results from the previously executed
@@ -48,10 +47,10 @@ def exercises():
     # returned by the fetchall() call to JSON so we can display it on the
     # page.
 
-    results = cursor.fetchall()
+    #results = cursor.fetchall()
 
     # Sends the results back to the web browser.
-    return render_template("home.j2", exercises=results)
+    return render_template("exercises.j2")
 
     # Listener
 if __name__ == "__main__":
