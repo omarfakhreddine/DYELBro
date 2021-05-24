@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS Exercises;
 CREATE TABLE Exercises (
   exerciseId int(11) NOT NULL AUTO_INCREMENT,
   exerciseName varchar(255) NOT NULL,
-  PRIMARY KEY (exerciseId),
+  PRIMARY KEY (exerciseId)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table `Exercises`
