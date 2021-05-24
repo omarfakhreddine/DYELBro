@@ -1,7 +1,7 @@
 import MySQLdb
 import os
-import database.db_credentials as db_cred
-#from dotenv import load_dotenv, find_dotenv
+from dotenv import load_dotenv
+import find_dotenv
 
 # Load our environment variables from the .env file in the root of our project.
 # load_dotenv(find_dotenv())
