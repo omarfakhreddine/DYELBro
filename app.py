@@ -125,7 +125,7 @@ def training_types():
 
     # Listener
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 4082))
+    port = int(os.environ.get('PORT', 9191))
     #                                 ^^^^
     #              You can replace this number with any valid port
 
