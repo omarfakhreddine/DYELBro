@@ -1,3 +1,5 @@
+{% from 'macros.j2' import data_table %}
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -112,7 +114,7 @@
 
   <h1>Add Your Exercise Below</h1>
   <div class="form">
-    <form action="" class="form-inline">
+    <form action="/exercises" method = "POST" class="form-inline">
       <div class="exercise-name-div" style="margin: auto;">
         <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
           exercise:</label><br>
@@ -183,57 +185,23 @@
       </th>
     </tr>
     <tr>
-      <th style="width: 100px;">Exercise ID</th>
-      <th>Exercise Name</th>
-      <th>Training Type:
-      </th>
-      <th>Movement Type:
-      </th>
-      <th>Muscle Groups:
-      </th>
-      <th style="width: 150px;">Modify
+      {% for header in headings %}
+      <th style="width: 100px;">{{ header }}</th>
+      {% endfor %}
+      <th style="width: 150px;">
+      Modify
       </th>
     </tr>
+    {% for row in data %}
     <tr>
-      <td>1</td>
-      <td>xxx</td>
-      <td>yyy</td>
-      <td>zzz</td>
-      <td>aaa</td>
+      {% for cell in row %}
+      <td>{{ cell }}</td>
+      {% endfor %}
       <td>
         <button>Update</button> <button>Delete</button>
       </td>
     </tr>
-    <tr>
-      <td>2</td>
-      <td>xxx</td>
-      <td>yyy</td>
-      <td>zzz</td>
-      <td>aaa</td>
-      <td>
-        <button>Update</button> <button>Delete</button>
-      </td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>xxx</td>
-      <td>yyy</td>
-      <td>zzz</td>
-      <td>aaa</td>
-      <td>
-        <button>Update</button> <button>Delete</button>
-      </td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td>xxx</td>
-      <td>yyy</td>
-      <td>zzz</td>
-      <td>aaa</td>
-      <td>
-        <button>Update</button> <button>Delete</button>
-      </td>
-    </tr>
+    {% endfor %}
   </table>
 </body>
 

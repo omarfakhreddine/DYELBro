@@ -1,0 +1,39 @@
+{% macro heading_row(headings) %}
+    <tr>
+      {% for header in headings %}
+      <th style="width: 100px;">{{ header }}</th>
+      {% endfor %}
+      <th style="width: 150px;">
+      Modify
+      </th>
+    </tr>
+{% endmacro %}
+
+{% macro data_rows(data) %}
+    {% for row in data %}
+    <tr>
+      {% for cell in row %}
+      <td>{{ cell }}</td>
+      {% endfor %}
+      <td>
+        <button>Update</button> <button>Delete</button>
+      </td>
+    </tr>
+    {% endfor %}
+{% endmacro %}
+
+{% macro all_rows(headings, data) %}
+    <table style="width:75%">
+        <tr>
+            <th colspan="6" style="text-align: left;">
+                <label for="search-bar">Search exercises by name:</label>
+                <input class="search-bar" name="search-bar" type="text" placeholder="Enter exercise name here...">
+            </th>
+        </tr>
+        {{ heading_row(headings) }}
+        {{ data_rows(data) }}
+    </table>
+{% endmacro %}
+
+
+

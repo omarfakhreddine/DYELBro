@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import os
 import json
 import database.db_connector as db
@@ -28,11 +28,33 @@ def root():
     return render_template("home.j2")
 
 
-@app.route('/exercises')
+
+
+
+@app.route('/exercises', methods=['POST', 'GET'])
 def exercises():
+    #print("testing")
+    headings = ("Exercise ID", "Exercise Name", "Training Type", "Movement Type", "Muscle Groups")
+    data = (
+    ("1", "Bench Press", "Strength", "Push", "Chest, Arms"),
+    ("2", "Deadlift", "Strength", "Pull", "Back"),
+    ("3", "Romanian Squat", "Strength", "Squat", "Legs"),
+    ("4", "Bicep Curl", "Strength", "Pull", "Arms")
+    )
+
+
+
+
+
+    #if request.method == 'POST':
+        #task_content = request.form['']
+    #else:
+        #return render_template("exercises.j2", headings=headings, data=data)
+
+
     # Write the query and save it to a variable
     #query = "SELECT * FROM Exercises;"
-
+    
     # The way the interface between MySQL and Flask works is by using an
     # object called a cursor. Think of it as the object that acts as the
     # person typing commands directly into the MySQL command line and
@@ -48,8 +70,10 @@ def exercises():
 
     #results = cursor.fetchall()
 
+
     # Sends the results back to the web browser.
-    return render_template("exercises.j2")
+
+    return render_template("exercises.j2", headings=headings, data=data)
 
     
 @app.route('/muscle_groups')
