@@ -179,83 +179,29 @@
   </p>
   <table style="width:75%">
     <tr>
-     <form>
       <th colspan="6" style="text-align: left;">
         <label for="search-bar">Search exercises by name:</label>
         <input class="search-bar" name="search-bar" type="text" placeholder="Enter exercise name here...">
       </th>
-      </form>
-    </tr>
-<tr>
-      <th style="width: 100px;">Exercise ID</th>
-      <th>Exercise Name</th>
-      <th>Training Type:
-        <!--<label for="training">Training Type:</label>
-        <br>
-        <select multiple name="training" id="training">
-          <option value="choose">choose</option>
-          <option value="strength">strength</option>
-          <option value="cardio">cardio</option>
-          <option value="endurance">endurance</option>
-          <option value="etc.">etc.</option>
-        </select>-->
-      </th>
-      <th>Movement Type:
-        <!--<label for="movement">Movement Type:</label>
-        <br>
-        <select multiple name="movement" id="movement">
-          <option value="choose">choose</option>
-          <option value="squat">squat</option>
-          <option value="hinge">hinge</option>
-          <option value="pull">pull</option>
-          <option value="push">push</option>
-          <option value="core">core</option>
-        </select>-->
-      </th>
-      <th>Muscle Groups:
-        <!--<label for="musclegroups">Muscle Groups:</label>
-        <div style="font-size: 12px; font-weight: bold;">
-          Hold control and click for multiple selections...
-        </div>
-        <select multiple name="musclegroups" id="musclegroups">
-          <option value="choose">choose</option>
-          <option value="hams">hams</option>
-          <option value="abs">abs</option>
-          <option value="quads">quads</option>
-          <option value="etc.">etc.</option>
-        </select>-->
-      </th>
-      <th style="width: 150px;">Modify
-      </th>
     </tr>
     <tr>
-      <td>
-      {% for cell in id_num %}
-        {% for key in cell.keys() %}
-          {{ cell[key] }} 
-        {% endfor %}
+      {% for header in headings %}
+      <th style="width: 100px;">{{ header }}</th>
       {% endfor %}
-      </td>
-      <td>
-      {% for cell in ex_num %}
-        {% for key in cell.keys() %}
-          {% if not loop.last %} {{ cell[key] }}, {% else %} {{ cell[key] }} {% endif %}
-        {% endfor %}
+      <th style="width: 150px;">
+      Modify
+      </th>
+    </tr>
+    {% for row in data %}
+    <tr>
+      {% for cell in row %}
+      <td>{{ cell }}</td>
       {% endfor %}
-      </td>
-      <td>
-      {% for cell in tr_num %}
-        {% for key in cell.keys() %}
-          {% if not loop.last %} {{ cell[key] }}, {% else %} {{ cell[key] }} {% endif %}
-        {% endfor %}    
-      {% endfor %}
-      </td>
-      <td>zzz</td>
-      <td>aaa</td>
       <td>
         <button>Update</button> <button>Delete</button>
       </td>
-    </tr>  
+    </tr>
+    {% endfor %}
   </table>
 </body>
 

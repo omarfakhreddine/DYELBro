@@ -112,11 +112,11 @@
 
     <h1>Add Your Muscle Group Below</h1>
     <div class="form">
-        <form action="" class="form-inline">
+        <form action="" class="form-inline" action="/muscle_groups" method ="POST">
             <div class="exercise-name-div" style="margin: auto;">
                 <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
                     muscle group:</label><br>
-                <input class="exercise-name" type="text" name="exercise_name" placeholder="Enter muscle group here...">
+                <input class="exercise-name" type="text" name="muscle_groups" placeholder="Enter muscle group here...">
             </div>
 
             <div class="submit-button">
@@ -143,22 +143,16 @@
                 <div>Modify</div>
             </th>
         </tr>
+        {% for row in data %}
         <tr>
-            <td>yyy</td>
-            <td><button>Update</button><button>Delete</button></td>
+            {% for key in row.keys() %}
+            <td>{{ row[key] }}</td>
+            <td>
+                <button>Update</button> <button>Delete</button>
+            </td>
+            {% endfor %}
         </tr>
-        <tr>
-            <td>yyy</td>
-            <td><button>Update</button><button>Delete</button></td>
-        </tr>
-        <tr>
-            <td>yyy</td>
-            <td><button>Update</button><button>Delete</button></td>
-        </tr>
-        <tr>
-            <td>yyy</td>
-            <td><button>Update</button><button>Delete</button></td>
-        </tr>
+        {% endfor %}
     </table>
 </body>
 
