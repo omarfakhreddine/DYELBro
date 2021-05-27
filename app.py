@@ -47,35 +47,84 @@ def exercises():
         training = request.form.get('training')
         movement = request.form.get('movement')
         muscle_groups = request.form.get('muscle_groups')
-        #query = "INSERT INTO Exercises (exerciseName) VALUES (%s)"
-        print("The exercise name is:", exercise_name) 
+        
+        query = "INSERT INTO Exercises (exerciseName) VALUES (%s)"
+        query_args = (exercise_name) 
+        query_results = db.execute_query(db_connection, query, [query_args])
+        db_connection.commit()
+
+        #query = "INSERT INTO ExerciseTrainings (trainingType) VALUES (%s)"
+        #query_args = (training) 
+        #query_results = db.execute_query(db_connection, query, [query_args])
+        #db_connection.commit()
+
+        #query = "INSERT INTO ExerciseMovements (movementType) VALUES (%s)"
+        #query_args = (movement) 
+        #query_results = db.execute_query(db_connection, query, [query_args])
+        #db_connection.commit()
+        
+        #query = "INSERT INTO ExerciseMuscles (muscleGroup) VALUES (%s)"
+        #query_args = (muscle_groups) 
+        #query_results = db.execute_query(db_connection, query, [query_args])
+        #db_connection.commit()
+
+        query = "INSERT INTO TrainingTypes (trainingType) VALUES (%s)"
+        query_args = (training) 
+        query_results = db.execute_query(db_connection, query, [query_args])
+        db_connection.commit()
+
+        query = "INSERT INTO MovementTypes (movementType) VALUES (%s)"
+        query_args = (movement) 
+        query_results = db.execute_query(db_connection, query, [query_args])
+        db_connection.commit()
+        
+        query = "INSERT INTO MuscleGroups (muscleGroup) VALUES (%s)"
+        query_args = (muscle_groups) 
+        query_results = db.execute_query(db_connection, query, [query_args])
+        db_connection.commit()
+
+
+    #get_id = "SELECT exerciseId FROM Exercises WHERE exerciseName = 'bench press' "
+    #cursor = db.execute_query(db_connection=db_connection, query=get_id)
+    #results_id = cursor.fetchall() #data from database.
+
+    #get_ex = "SELECT exerciseName FROM Exercises WHERE exerciseId = 1"
+    #cursor = db.execute_query(db_connection=db_connection, query=get_ex)
+    #results_ex = cursor.fetchall() #data from database.
      
-    #query = "INSERT INTO Exercises (exerciseName) VALUES (%s)"
-    #query_args = (exercise_name)
-    #cursor = db.execute_query(db_connection=db_connection, query=query, query_args=query_args)
-    #results = cursor.fetchall()
-    get_id = "SELECT exerciseId FROM Exercises WHERE exerciseName = 'bench press' "
-    cursor = db.execute_query(db_connection=db_connection, query=get_id)
-    results_id = cursor.fetchall() #data from database.
+    #get_train = "SELECT trainingType FROM TrainingTypes WHERE trainingType = 'cardio' "
+    #cursor = db.execute_query(db_connection=db_connection, query=get_train)
+    #results_tr= cursor.fetchall() #data from database.
 
-    get_ex = "SELECT exerciseName FROM Exercises WHERE exerciseId = 1"
-    cursor = db.execute_query(db_connection=db_connection, query=get_ex)
-    results_ex = cursor.fetchall() #data from database.
-     
-    get_train = "SELECT trainingType FROM TrainingTypes WHERE trainingType = 'cardio' "
-    cursor = db.execute_query(db_connection=db_connection, query=get_train)
-    results_tr= cursor.fetchall() #data from database.
+    #get_move = "SELECT movementType FROM MovementTypes WHERE movementType = 'hinge' "
+    #cursor = db.execute_query(db_connection=db_connection, query=get_move)
+    #results_mov= cursor.fetchall() #data from database.
 
-    get_move = "SELECT movementType FROM MovementTypes WHERE movementType = 'hinge' "
-    cursor = db.execute_query(db_connection=db_connection, query=get_move)
-    results_mov= cursor.fetchall() #data from database.
+    #get_musc = "SELECT muscleGroup FROM MuscleGroups WHERE muscleGroup = 'biceps' "
+    #cursor = db.execute_query(db_connection=db_connection, query=get_musc)
+    #results_musc= cursor.fetchall() #data from database.
 
-    get_musc = "SELECT muscleGroup FROM MuscleGroups WHERE muscleGroup = 'biceps' "
-    cursor = db.execute_query(db_connection=db_connection, query=get_musc)
-    results_musc= cursor.fetchall() #data from database.
-    
+    get_all = "SELECT Exercises.exerciseId, Exercises.exerciseName, TrainingTypes.trainingType, \
+    MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
+    INNER JOIN ExerciseTrainings \
+    ON Exercises.exerciseID = ExerciseTrainings.exerciseId \
+    INNER JOIN TrainingTypes \
+    ON ExerciseTrainings.trainingType = TrainingTypes.trainingType \
+    INNER JOIN ExerciseMovements \
+    ON Exercises.exerciseId = ExerciseMovements.exerciseId \
+    INNER JOIN MovementTypes \
+    ON ExerciseMovements.movementType = MovementTypes.movementType \
+    INNER JOIN ExerciseMuscles \
+    ON Exercises.exerciseID = ExerciseMuscles.exerciseId  \
+    INNER JOIN MuscleGroups  \
+    ON ExerciseMuscles.muscleGroup = MuscleGroups.muscleGroup"
+
+    cursor = db.execute_query(db_connection=db_connection, query=get_all)
+    results_all= cursor.fetchall() #data from database.
+
+    return render_template("exercises.j2", data=results_all)
    # return render_template("exercises.j2", headings=headings, data=placeholder)
-    return render_template("exercises.j2", id_num=results_id, ex_num=results_ex, tr_num=results_tr)
+   # return render_template("exercises.j2", id_num=results_id, ex_num=results_ex, tr_num=results_tr)
    
 
     

@@ -156,7 +156,7 @@
           Hold control and click for multiple selections...
         </div>
         <select multiple name="muscle_groups" id="muscle_groups">
-          <option value="choose">Shoose</option>
+          <option value="choose">Choose</option>
           <option value="hams">Chest</option>
           <option value="abs">Arms</option>
           <option value="quads">Back</option>
@@ -228,34 +228,16 @@
       <th style="width: 150px;">Modify
       </th>
     </tr>
+   {% for row in data %}
     <tr>
-      <td>
-      {% for cell in id_num %}
-        {% for key in cell.keys() %}
-          {{ cell[key] }} 
-        {% endfor %}
+      {% for key in row.keys() %}
+      <td>{{ row[key] }}</td>
       {% endfor %}
-      </td>
-      <td>
-      {% for cell in ex_num %}
-        {% for key in cell.keys() %}
-          {% if not loop.last %} {{ cell[key] }}, {% else %} {{ cell[key] }} {% endif %}
-        {% endfor %}
-      {% endfor %}
-      </td>
-      <td>
-      {% for cell in tr_num %}
-        {% for key in cell.keys() %}
-          {% if not loop.last %} {{ cell[key] }}, {% else %} {{ cell[key] }} {% endif %}
-        {% endfor %}    
-      {% endfor %}
-      </td>
-      <td>zzz</td>
-      <td>aaa</td>
       <td>
         <button>Update</button> <button>Delete</button>
       </td>
-    </tr>  
+    </tr>
+    {% endfor %}
   </table>
 </body>
 
