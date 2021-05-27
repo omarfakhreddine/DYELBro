@@ -120,7 +120,7 @@ def exercises():
     #cursor = db.execute_query(db_connection=db_connection, query=get_musc)
     #results_musc= cursor.fetchall() #data from database.
 
-    get_all = "SELECT Exercises.exerciseId, Exercises.exerciseName, TrainingTypes.trainingType, \
+    get_all = " SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, TrainingTypes.trainingType, \
     MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
     INNER JOIN ExerciseTrainings \
     ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
@@ -133,7 +133,7 @@ def exercises():
     INNER JOIN ExerciseMuscles \
     ON Exercises.exerciseId = ExerciseMuscles.exerciseId  \
     INNER JOIN MuscleGroups  \
-    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId"
+    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId "
     cursor = db.execute_query(db_connection=db_connection, query=get_all)
     results_all= cursor.fetchall() #data from database.
 
@@ -159,7 +159,7 @@ def muscle_groups():
         db_connection.commit()
 
     
-    get_data = "SELECT muscleGroup FROM MuscleGroups"
+    get_data = "SELECT distinct muscleGroup FROM MuscleGroups"
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
         
@@ -183,7 +183,7 @@ def movement_types():
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
 
-    get_data = "SELECT movementType FROM MovementTypes"
+    get_data = "SELECT distinct movementType FROM MovementTypes"
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
 
@@ -203,7 +203,7 @@ def training_types():
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
 
-    get_data = "SELECT trainingType FROM TrainingTypes"
+    get_data = "SELECT distinct trainingType FROM TrainingTypes"
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
 
