@@ -43,6 +43,7 @@ def exercises():
     )
 
     if request.method == "POST":
+
         exercise_name = request.form.get('exercise_name')
         training = request.form.get('training')
         movement = request.form.get('movement')
@@ -53,20 +54,6 @@ def exercises():
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
 
-        #query = "INSERT INTO ExerciseTrainings (trainingType) VALUES (%s)"
-        #query_args = (training) 
-        #query_results = db.execute_query(db_connection, query, [query_args])
-        #db_connection.commit()
-
-        #query = "INSERT INTO ExerciseMovements (movementType) VALUES (%s)"
-        #query_args = (movement) 
-        #query_results = db.execute_query(db_connection, query, [query_args])
-        #db_connection.commit()
-        
-        #query = "INSERT INTO ExerciseMuscles (muscleGroup) VALUES (%s)"
-        #query_args = (muscle_groups) 
-        #query_results = db.execute_query(db_connection, query, [query_args])
-        #db_connection.commit()
 
         query = "INSERT INTO TrainingTypes (trainingType) VALUES (%s)"
         query_args = (training) 
@@ -82,6 +69,35 @@ def exercises():
         query_args = (muscle_groups) 
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
+
+        query = "INSERT INTO ExerciseTrainings (exerciseId, trainingId) \
+        SELECT Exercises.exerciseId, TrainingTypes.trainingId \
+        FROM Exercises, TrainingTypes  \
+        WHERE Exercises.exerciseName = %s \
+        AND TrainingTypes.trainingType= %s"
+        query_args = (exercise_name, training) 
+        query_results = db.execute_query(db_connection, query, query_args)
+        db_connection.commit()
+
+        query = "INSERT INTO ExerciseMovements (exerciseId, movementId) \
+        SELECT Exercises.exerciseId, MovementTypes.movementId \
+        FROM Exercises, MovementTypes  \
+        WHERE Exercises.exerciseName = %s \
+        AND MovementTypes.movementType= %s"
+        query_args = (exercise_name, movement) 
+        query_results = db.execute_query(db_connection, query, query_args)
+        db_connection.commit()
+
+        query = "INSERT INTO ExerciseMuscles (exerciseId, muscleId) \
+        SELECT Exercises.exerciseId, MuscleGroups.muscleId \
+        FROM Exercises, MuscleGroups  \
+        WHERE Exercises.exerciseName = %s \
+        AND MuscleGroups.muscleGroup= %s"
+        query_args = (exercise_name, muscle_groups) 
+        query_results = db.execute_query(db_connection, query, query_args)
+        db_connection.commit()
+
+        print("CHECK")
 
 
     #get_id = "SELECT exerciseId FROM Exercises WHERE exerciseName = 'bench press' "
@@ -107,18 +123,17 @@ def exercises():
     get_all = "SELECT Exercises.exerciseId, Exercises.exerciseName, TrainingTypes.trainingType, \
     MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
     INNER JOIN ExerciseTrainings \
-    ON Exercises.exerciseID = ExerciseTrainings.exerciseId \
+    ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
     INNER JOIN TrainingTypes \
-    ON ExerciseTrainings.trainingType = TrainingTypes.trainingType \
+    ON ExerciseTrainings.trainingId = TrainingTypes.trainingId \
     INNER JOIN ExerciseMovements \
     ON Exercises.exerciseId = ExerciseMovements.exerciseId \
     INNER JOIN MovementTypes \
-    ON ExerciseMovements.movementType = MovementTypes.movementType \
+    ON ExerciseMovements.movementId = MovementTypes.movementId \
     INNER JOIN ExerciseMuscles \
-    ON Exercises.exerciseID = ExerciseMuscles.exerciseId  \
+    ON Exercises.exerciseId = ExerciseMuscles.exerciseId  \
     INNER JOIN MuscleGroups  \
-    ON ExerciseMuscles.muscleGroup = MuscleGroups.muscleGroup"
-
+    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId"
     cursor = db.execute_query(db_connection=db_connection, query=get_all)
     results_all= cursor.fetchall() #data from database.
 
