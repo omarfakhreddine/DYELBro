@@ -1,5 +1,5 @@
-from flask import Flask, render_template
-from flask import request, redirect
+from flask import Flask, render_template, request, redirect
+from flask_bootstrap import Bootstrap
 import os
 import json
 import database.db_connector as db
@@ -21,6 +21,7 @@ TODO: make search functional by making search input into forms
 # Configuration
 
 app = Flask(__name__)
+Bootstrap(app)
 db_connection = db.connect_to_database()
 
 # Routes
