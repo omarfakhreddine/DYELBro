@@ -13,13 +13,11 @@
       text-align: center;
       margin: auto;
     }
-
     h1 {
       margin: auto;
       text-align: center;
       padding-top: 50px;
     }
-
     .page-description {
       max-width: 80%;
       text-align: center;
@@ -27,26 +25,21 @@
       margin-top: 15px;
       margin-bottom: 15px;
     }
-
     ul {
       margin: auto;
     }
-
     .ul-title {
       font-weight: bold;
       padding-bottom: 15px;
     }
-
     .form-inline:not(.exercise-name-div) {
       display: flex;
       flex-flow: row wrap;
       align-items: center;
     }
-
     .form-inline label {
       margin: auto
     }
-
     .form-inline input {
       vertical-align: middle;
       margin: 5px 10px 5px 0;
@@ -54,33 +47,27 @@
       background-color: #fff;
       border: 1px solid #ddd;
     }
-
     .exercise-name:focus {
       background-color: lightblue;
       transition: all 0.4s ease-in-out;
     }
-
     .search-bar[type=text]:focus {
       width: 86%;
       transition: all 0.4s ease-in-out;
       background-color: lightblue;
     }
-
     .form-inline button {
       padding: 10px 20px;
       background-color: dodgerblue;
       border: 1px solid #ddd;
     }
-
     .form-inline button:hover {
       background-color: royalblue;
     }
-
     .form-inline {
       flex-direction: row;
       align-items: stretch;
     }
-
     form {
       border: 1px solid black;
       text-align: center;
@@ -88,7 +75,6 @@
       margin: auto;
       padding: 20px;
     }
-
     .submit-button {
       height: 25%;
       margin: auto;
@@ -112,7 +98,7 @@
 
   <h1>Add Your Exercise Below</h1>
   <div class="form">
-    <form action="" class="form-inline">
+    <form action="" class="form-inline" action="/exercises" method ="POST">
       <div class="exercise-name-div" style="margin: auto;">
         <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
           exercise:</label><br>
@@ -125,11 +111,11 @@
         </div>
         <select multiple name="training" id="training">
           <option value="choose">Choose</option>
-          <option value="squat">Cardiovascular</option>
-          <option value="hinge">Muscular Endurance</option>
-          <option value="pull">Strength</option>
-          <option value="push">Stability</option>
-          <option value="core">Metabolic Conditioning</option>
+          <option value="cardiovascular">Cardiovascular</option>
+          <option value="muscular endurance">Muscular Endurance</option>
+          <option value="strength">Strength</option>
+          <option value="stability">Stability</option>
+          <option value="metabolic">Metabolic Conditioning</option>
         </select>
       </ul>
 
@@ -154,7 +140,7 @@
           Hold control and click for multiple selections...
         </div>
         <select multiple name="muscle_groups" id="muscle_groups">
-          <option value="choose">Shoose</option>
+          <option value="choose">Choose</option>
           <option value="hams">Chest</option>
           <option value="abs">Arms</option>
           <option value="quads">Back</option>
@@ -194,46 +180,16 @@
       <th style="width: 150px;">Modify
       </th>
     </tr>
+   {% for row in data %}
     <tr>
-      <td>1</td>
-      <td>xxx</td>
-      <td>yyy</td>
-      <td>zzz</td>
-      <td>aaa</td>
+      {% for key in row.keys() %}
+      <td>{{ row[key] }}</td>
+      {% endfor %}
       <td>
         <button>Update</button> <button>Delete</button>
       </td>
     </tr>
-    <tr>
-      <td>2</td>
-      <td>xxx</td>
-      <td>yyy</td>
-      <td>zzz</td>
-      <td>aaa</td>
-      <td>
-        <button>Update</button> <button>Delete</button>
-      </td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td>xxx</td>
-      <td>yyy</td>
-      <td>zzz</td>
-      <td>aaa</td>
-      <td>
-        <button>Update</button> <button>Delete</button>
-      </td>
-    </tr>
-    <tr>
-      <td>4</td>
-      <td>xxx</td>
-      <td>yyy</td>
-      <td>zzz</td>
-      <td>aaa</td>
-      <td>
-        <button>Update</button> <button>Delete</button>
-      </td>
-    </tr>
+    {% endfor %}
   </table>
 </body>
 

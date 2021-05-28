@@ -22,8 +22,9 @@ INSERT INTO Exercises (exerciseName) VALUES ('bench press'), ('deadlift'), ('squ
 DROP TABLE IF EXISTS TrainingTypes;
 
 CREATE TABLE TrainingTypes (
+  trainingId  int(11) NOT NULL AUTO_INCREMENT,
   trainingType varchar(255) NOT NULL,
-  PRIMARY KEY (trainingType)
+  PRIMARY KEY (trainingId)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table `TrainingTypes`
@@ -37,15 +38,15 @@ INSERT INTO TrainingTypes (trainingType) VALUES ('cardio'), ('endurance'), ('ana
 DROP TABLE IF EXISTS ExerciseTrainings;
 
 CREATE TABLE ExerciseTrainings (
-  exerciseId int(11) NOT NULL DEFAULT 0, -- do we  make null or autoincrement?
-  trainingType varchar(255) NOT NULL DEFAULT 0,
-  PRIMARY KEY (exerciseId, trainingType),
-  CONSTRAINT ExerciseTrainings_fk_1 FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId),
-  CONSTRAINT ExerciseTrainings_fk_2 FOREIGN KEY (trainingType) REFERENCES TrainingTypes (trainingType)
+  exerciseId int(11) NOT NULL, -- do we  make null or autoincrement?
+  trainingId  int(11) NOT NULL,
+  PRIMARY KEY (exerciseId, trainingId),
+  CONSTRAINT ExerciseTrainings_fk_1 FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId) ON DELETE CASCADE,
+  CONSTRAINT ExerciseTrainings_fk_2 FOREIGN KEY (trainingId) REFERENCES TrainingTypes (trainingId) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table `ExerciseTrainings`
-INSERT INTO ExerciseTrainings (exerciseId, trainingType) VALUES (1, 'cardio'), (2, 'endurance'), (3, 'anaerobic');
+INSERT INTO ExerciseTrainings (exerciseId, trainingId) VALUES (1, 1), (2, 2), (3, 3);
 
 
 
@@ -56,8 +57,9 @@ INSERT INTO ExerciseTrainings (exerciseId, trainingType) VALUES (1, 'cardio'), (
 DROP TABLE IF EXISTS MuscleGroups;
 
 CREATE TABLE MuscleGroups (
+  muscleId int(11) NOT NULL AUTO_INCREMENT,
   muscleGroup varchar(255) NOT NULL,
-  PRIMARY KEY (muscleGroup)
+  PRIMARY KEY (muscleId)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table `MuscleGroups`
@@ -71,15 +73,15 @@ INSERT INTO MuscleGroups (muscleGroup) VALUES ('biceps'), ('triceps'), ('quads')
 DROP TABLE IF EXISTS ExerciseMuscles;
 
 CREATE TABLE ExerciseMuscles (
-  exerciseId int(11) NOT NULL DEFAULT 0, -- do we  make null or autoincrement?
-  muscleGroup varchar(255) NOT NULL DEFAULT 0,
-  PRIMARY KEY (exerciseId, muscleGroup),
-  CONSTRAINT ExerciseMuscles_fk_1 FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId),
-  CONSTRAINT ExerciseMuscles_fk_2 FOREIGN KEY (muscleGroup) REFERENCES MuscleGroups (muscleGroup)
+  exerciseId int(11) NOT NULL, -- do we  make null or autoincrement?
+  muscleId int(11) NOT NULL,
+  PRIMARY KEY (exerciseId, muscleId),
+  CONSTRAINT ExerciseMuscles_fk_1 FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId) ON DELETE CASCADE,
+  CONSTRAINT ExerciseMuscles_fk_2 FOREIGN KEY (muscleId) REFERENCES MuscleGroups (muscleId) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table `ExerciseMuscles`
-INSERT INTO ExerciseMuscles (exerciseId, muscleGroup) VALUES (1, 'biceps'), (2, 'triceps'), (3, 'quads');
+INSERT INTO ExerciseMuscles (exerciseId, muscleId) VALUES (1, 1), (2, 2), (3, 3);
 
 --
 -- Table structure for table `MuscleGroups`
@@ -88,8 +90,9 @@ INSERT INTO ExerciseMuscles (exerciseId, muscleGroup) VALUES (1, 'biceps'), (2, 
 DROP TABLE IF EXISTS MovementTypes;
 
 CREATE TABLE MovementTypes (
+  movementId  int(11) NOT NULL AUTO_INCREMENT,
   movementType varchar(255) NOT NULL,
-  PRIMARY KEY (movementType)
+  PRIMARY KEY (movementId)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table `MovementTypes`
@@ -103,12 +106,12 @@ INSERT INTO MovementTypes (movementType) VALUES ('push'), ('pull'), ('hinge');
 DROP TABLE IF EXISTS ExerciseMovements;
 
 CREATE TABLE ExerciseMovements (
-  exerciseId int(11) NOT NULL DEFAULT 0, -- do we  make null or autoincrement?
-  movementType varchar(255) NOT NULL DEFAULT 0,
-  PRIMARY KEY (exerciseId, movementType),
-  CONSTRAINT ExerciseMovements_fk_1 FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId),
-  CONSTRAINT ExerciseMovements_fk_2 FOREIGN KEY (movementType) REFERENCES MovementTypes (movementType)
+  exerciseId int(11) NOT NULL, -- do we  make null or autoincrement?
+  movementId  int(11) NOT NULL,
+  PRIMARY KEY (exerciseId, movementId),
+  CONSTRAINT ExerciseMovements_fk_1 FOREIGN KEY (exerciseId) REFERENCES Exercises (exerciseId) ON DELETE CASCADE,
+  CONSTRAINT ExerciseMovements_fk_2 FOREIGN KEY (movementId) REFERENCES MovementTypes (movementId) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table `ExerciseMovements`
-INSERT INTO ExerciseMovements (exerciseId, movementType) VALUES (1, 'push'), (2, 'pull'), (3, 'hinge');
+INSERT INTO ExerciseMovements (exerciseId, movementId) VALUES (1, 1), (2, 2), (3, 3);

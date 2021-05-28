@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>DYELBro - Muscle Groups</title>
+    <title>DYELBro - Movement Types</title>
     <link rel="stylesheet" href=".\static\css\style.css" type="text/css">
     <style>
         table,
@@ -110,13 +110,13 @@
         <a href="/muscle_groups">Muscle Groups</a>
     </div>
 
-    <h1>Add Your Muscle Group Below</h1>
+    <h1>Add Your Movement Type Below</h1>
     <div class="form">
-        <form action="" class="form-inline" action="/muscle_groups" method ="POST">
+        <form action="" class="form-inline"action="/update/{{exercise_update.id}}" method ="POST" >
             <div class="exercise-name-div" style="margin: auto;">
                 <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
-                    muscle group:</label><br>
-                <input class="exercise-name" type="text" name="muscle_groups" placeholder="Enter muscle group here...">
+                    movement type:</label><br>
+                <input class="exercise-name" type="text" name="update_ex" placeholder="Enter movement type here...">
             </div>
 
             <div class="submit-button">
@@ -127,33 +127,6 @@
         </form>
     </div>
 
-    <p class="page-description" style="font-weight: bold; font-size: large;">Below you can find all the created saved
-        exercises. You can search for a specific one by typing its name in the search bar.
-    </p>
-    <table style="width:75%">
-        <tr>
-            <th colspan="5" style="text-align: left;">
-                <label for="search-bar">Search training type by name:</label>
-                <input class="search-bar" name="search-bar" type="text" placeholder="Enter muscle group here...">
-            </th>
-        </tr>
-        <tr>
-            <th>Muscle Group:</th>
-            <th style="width: 150px;">
-                <div>Modify</div>
-            </th>
-        </tr>
-        {% for row in data %}
-        <tr>
-            {% for key in row.keys() %}
-            <td>{{ row[key] }}</td>
-            <td>
-                <button>Update</button> <button>Delete</button>
-            </td>
-            {% endfor %}
-        </tr>
-        {% endfor %}
-    </table>
 </body>
 
 </html>
