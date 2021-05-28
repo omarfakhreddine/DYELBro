@@ -74,7 +74,8 @@ def exercises():
         SELECT Exercises.exerciseId, TrainingTypes.trainingId \
         FROM Exercises, TrainingTypes  \
         WHERE Exercises.exerciseName = %s \
-        AND TrainingTypes.trainingType= %s"
+        AND TrainingTypes.trainingType= %s \
+        AND Exercises.exerciseId = TrainingTypes.trainingId"
         query_args = (exercise_name, training) 
         query_results = db.execute_query(db_connection, query, query_args)
         db_connection.commit()
@@ -83,7 +84,8 @@ def exercises():
         SELECT Exercises.exerciseId, MovementTypes.movementId \
         FROM Exercises, MovementTypes  \
         WHERE Exercises.exerciseName = %s \
-        AND MovementTypes.movementType= %s"
+        AND MovementTypes.movementType= %s \
+        AND Exercises.exerciseId = MovementTypes.movementId"
         query_args = (exercise_name, movement) 
         query_results = db.execute_query(db_connection, query, query_args)
         db_connection.commit()
@@ -92,14 +94,34 @@ def exercises():
         SELECT Exercises.exerciseId, MuscleGroups.muscleId \
         FROM Exercises, MuscleGroups  \
         WHERE Exercises.exerciseName = %s \
-        AND MuscleGroups.muscleGroup= %s"
+        AND MuscleGroups.muscleGroup= %s  \
+        AND Exercises.exerciseId = MuscleGroups.muscleId"
         query_args = (exercise_name, muscle_groups) 
         query_results = db.execute_query(db_connection, query, query_args)
         db_connection.commit()
+        
+
+        #query = "INSERT INTO ExerciseTrainings (exerciseId, trainingId) VALUES (%s)"
+        #query_args = (exerciseId, trainingId) 
+        #query_results = db.execute_query(db_connection, query, [query_args])
+        #db_connection.commit()
+
+
+        #query = "INSERT INTO ExerciseMovements (exerciseId, movementId) VALUES (%s)"
+        #query_args = (exerciseId, movementId) 
+        #query_results = db.execute_query(db_connection, query, [query_args])
+        #db_connection.commit()
+
+        #query = "INSERT INTO ExerciseMuscles (exerciseId, muscleId) VALUES (%s)"
+        #query_args = (exerciseId, muscleId) 
+        #query_results = db.execute_query(db_connection, query, [query_args])
+        #db_connection.commit()
+
+
 
         print("CHECK")
 
-
+    
     #get_id = "SELECT exerciseId FROM Exercises WHERE exerciseName = 'bench press' "
     #cursor = db.execute_query(db_connection=db_connection, query=get_id)
     #results_id = cursor.fetchall() #data from database.
@@ -208,6 +230,63 @@ def training_types():
     results = cursor.fetchall() #data from database.
 
     return render_template("training_types.j2", data=results)
+
+
+
+#@app.route('/update/<int:id>', methods = ['POST', 'GET'])
+#exercise_update = "SELECT distinct trainingType FROM TrainingTypes"
+
+#def update_exercise(id):
+    #if request.method == "POST":
+        #exercise_update = request.form.get('update_ex')
+        #db_connection.commit()
+        #redirect('/exercises')
+
+    #return render_template("update.j2", exercise_update = exercise_update)
+
+     #<form action="/update/{{row.id}}" method="POST">
+      #    <button type="submit"> Update </button> <button>Delete</button>
+       # </form> put in exercise.j2
+  
+    #if request.method == 'GET':
+
+        #query = " SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, TrainingTypes.trainingType, \
+        #MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
+        #INNER JOIN ExerciseTrainings \
+        #ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
+        #INNER JOIN TrainingTypes \
+        #ON ExerciseTrainings.trainingId = TrainingTypes.trainingId \
+        #INNER JOIN ExerciseMovements \
+        #ON Exercises.exerciseId = ExerciseMovements.exerciseId \
+        #INNER JOIN MovementTypes \
+        #ON ExerciseMovements.movementId = MovementTypes.movementId \
+        #INNER JOIN ExerciseMuscles \
+        #ON Exercises.exerciseId = ExerciseMuscles.exerciseId  \
+        #INNER JOIN MuscleGroups  \
+        #ON ExerciseMuscles.muscleId = MuscleGroups.muscleId \
+        #WHERE Exercise.exerciseId = %s" 
+        #query_args = (id) 
+        #cursor = db.execute_query(db_connection=db_connection, query=get_it)
+        #results_it = cursor.fetchone() #data from database.
+
+       # if results_it == None:
+        #    return "Not found"
+
+        #get_data = "SELECT distinct trainingType FROM TrainingTypes"
+        #cursor = db.execute_query(db_connection=db_connection, query=get_data)
+        #results = cursor.fetchall() #data from database.
+
+        #return render_template("training_types.j2", data=results)
+
+        
+
+
+
+
+
+
+
+
 
     # Listener
 if __name__ == "__main__":
