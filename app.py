@@ -41,6 +41,39 @@ def exercises():
     ("4", "Bicep Curl", "Strength", "Pull", "Arms")
     )
 
+    get_training = "SELECT trainingType FROM TrainingTypes"
+    cursor = db.execute_query(db_connection=db_connection, query=get_training)
+    training_results = cursor.fetchall() #data from database.
+
+    get_movement = "SELECT movementType FROM MovementTypes"
+    cursor = db.execute_query(db_connection=db_connection, query=get_movement)
+    movement_results = cursor.fetchall() #data from database.
+
+    get_muscle = "SELECT muscleGroup FROM MuscleGroups"
+    cursor = db.execute_query(db_connection=db_connection, query=get_muscle)
+    muscle_results = cursor.fetchall() #data from database.
+    
+    get_all = " SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, TrainingTypes.trainingType, \
+    MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
+    INNER JOIN ExerciseTrainings \
+    ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
+    INNER JOIN TrainingTypes \
+    ON ExerciseTrainings.trainingId = TrainingTypes.trainingId \
+    INNER JOIN ExerciseMovements \
+    ON Exercises.exerciseId = ExerciseMovements.exerciseId \
+    INNER JOIN MovementTypes \
+    ON ExerciseMovements.movementId = MovementTypes.movementId \
+    INNER JOIN ExerciseMuscles \
+    ON Exercises.exerciseId = ExerciseMuscles.exerciseId  \
+    INNER JOIN MuscleGroups  \
+    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId "
+    cursor = db.execute_query(db_connection=db_connection, query=get_all)
+    results_all = cursor.fetchall() #data from database.
+
+    return render_template("exercises.j2", data=results_all, training=training_results, 
+    movement=movement_results, muscle=muscle_results)
+   
+
     if request.method == "POST":
 
         exercise_name = request.form.get('exercise_name')
@@ -141,27 +174,6 @@ def exercises():
     #cursor = db.execute_query(db_connection=db_connection, query=get_musc)
     #results_musc= cursor.fetchall() #data from database.
 
-    get_all = " SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, TrainingTypes.trainingType, \
-    MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
-    INNER JOIN ExerciseTrainings \
-    ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
-    INNER JOIN TrainingTypes \
-    ON ExerciseTrainings.trainingId = TrainingTypes.trainingId \
-    INNER JOIN ExerciseMovements \
-    ON Exercises.exerciseId = ExerciseMovements.exerciseId \
-    INNER JOIN MovementTypes \
-    ON ExerciseMovements.movementId = MovementTypes.movementId \
-    INNER JOIN ExerciseMuscles \
-    ON Exercises.exerciseId = ExerciseMuscles.exerciseId  \
-    INNER JOIN MuscleGroups  \
-    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId "
-    cursor = db.execute_query(db_connection=db_connection, query=get_all)
-    results_all= cursor.fetchall() #data from database.
-
-    return render_template("exercises.j2", data=results_all)
-   # return render_template("exercises.j2", headings=headings, data=placeholder)
-   # return render_template("exercises.j2", id_num=results_id, ex_num=results_ex, tr_num=results_tr)
-   
 
     
 @app.route('/muscle_groups', methods=['GET', 'POST'])
