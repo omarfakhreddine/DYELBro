@@ -110,12 +110,11 @@
           Hold control and click for multiple selections...
         </div>
         <select multiple name="training" id="training">
-          <option value="choose">Choose</option>
-          <option value="cardiovascular">Cardiovascular</option>
-          <option value="muscular endurance">Muscular Endurance</option>
-          <option value="strength">Strength</option>
-          <option value="stability">Stability</option>
-          <option value="metabolic">Metabolic Conditioning</option>
+          {% for row in training %}
+            {% for key in row.keys() %}
+            <option value="{{row[key]}}">{{row[key]}}</option>
+            {% endfor %}
+          {% endfor %}
         </select>
       </ul>
 
@@ -125,12 +124,11 @@
           Hold control and click for multiple selections...
         </div>
         <select multiple name="movement" id="movement">
-          <option value="choose">Choose</option>
-          <option value="squat">Squat</option>
-          <option value="hinge">Hinge</option>
-          <option value="pull">Pull</option>
-          <option value="push">Push</option>
-          <option value="core">Isolation</option>
+          {% for row in movement %}
+            {% for key in row.keys() %}
+            <option value="{{row[key]}}">{{row[key]}}</option>
+            {% endfor %}
+          {% endfor %}
         </select>
       </ul>
 
@@ -140,14 +138,11 @@
           Hold control and click for multiple selections...
         </div>
         <select multiple name="muscle_groups" id="muscle_groups">
-          <option value="choose">Choose</option>
-          <option value="hams">Chest</option>
-          <option value="abs">Arms</option>
-          <option value="quads">Back</option>
-          <option value="hams">Shoulders</option>
-          <option value="abs">Hips</option>
-          <option value="quads">Legs</option>
-          <option value="quads">Core</option>
+          {% for row in muscle %}
+            {% for key in row.keys() %}
+            <option value="{{row[key]}}">{{row[key]}}</option>
+            {% endfor %}
+          {% endfor %}
         </select>
       </ul>
       <div class="submit-button">

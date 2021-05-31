@@ -41,6 +41,7 @@ def exercises():
     ("4", "Bicep Curl", "Strength", "Pull", "Arms")
     )
 
+    # values for insert form dropdowns
     get_training = "SELECT trainingType FROM TrainingTypes"
     cursor = db.execute_query(db_connection=db_connection, query=get_training)
     training_results = cursor.fetchall() #data from database.
@@ -53,6 +54,7 @@ def exercises():
     cursor = db.execute_query(db_connection=db_connection, query=get_muscle)
     muscle_results = cursor.fetchall() #data from database.
     
+    # rows for table 
     get_all = " SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, TrainingTypes.trainingType, \
     MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
     INNER JOIN ExerciseTrainings \
