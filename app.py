@@ -1,5 +1,4 @@
-from flask import Flask, render_template
-from flask import request, redirect
+from flask import Flask, render_template, request, redirect
 import os
 import json
 import database.db_connector as db
