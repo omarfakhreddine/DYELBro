@@ -68,7 +68,7 @@ def exercises():
     INNER JOIN ExerciseMuscles \
     ON Exercises.exerciseId = ExerciseMuscles.exerciseId  \
     INNER JOIN MuscleGroups  \
-    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId "
+    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId"
     cursor = db.execute_query(db_connection=db_connection, query=get_all)
     results_all = cursor.fetchall() #data from database.
 
@@ -88,28 +88,11 @@ def exercises():
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
 
-
-        query = "INSERT INTO TrainingTypes (trainingType) VALUES (%s)"
-        query_args = (training) 
-        query_results = db.execute_query(db_connection, query, [query_args])
-        db_connection.commit()
-
-        query = "INSERT INTO MovementTypes (movementType) VALUES (%s)"
-        query_args = (movement) 
-        query_results = db.execute_query(db_connection, query, [query_args])
-        db_connection.commit()
-        
-        query = "INSERT INTO MuscleGroups (muscleGroup) VALUES (%s)"
-        query_args = (muscle_groups) 
-        query_results = db.execute_query(db_connection, query, [query_args])
-        db_connection.commit()
-
         query = "INSERT INTO ExerciseTrainings (exerciseId, trainingId) \
         SELECT Exercises.exerciseId, TrainingTypes.trainingId \
         FROM Exercises, TrainingTypes  \
         WHERE Exercises.exerciseName = %s \
-        AND TrainingTypes.trainingType= %s \
-        AND Exercises.exerciseId = TrainingTypes.trainingId"
+        AND TrainingTypes.trainingType= %s"
         query_args = (exercise_name, training) 
         query_results = db.execute_query(db_connection, query, query_args)
         db_connection.commit()
@@ -118,8 +101,7 @@ def exercises():
         SELECT Exercises.exerciseId, MovementTypes.movementId \
         FROM Exercises, MovementTypes  \
         WHERE Exercises.exerciseName = %s \
-        AND MovementTypes.movementType= %s \
-        AND Exercises.exerciseId = MovementTypes.movementId"
+        AND MovementTypes.movementType= %s"
         query_args = (exercise_name, movement) 
         query_results = db.execute_query(db_connection, query, query_args)
         db_connection.commit()
@@ -128,8 +110,7 @@ def exercises():
         SELECT Exercises.exerciseId, MuscleGroups.muscleId \
         FROM Exercises, MuscleGroups  \
         WHERE Exercises.exerciseName = %s \
-        AND MuscleGroups.muscleGroup= %s  \
-        AND Exercises.exerciseId = MuscleGroups.muscleId"
+        AND MuscleGroups.muscleGroup= %s"
         query_args = (exercise_name, muscle_groups) 
         query_results = db.execute_query(db_connection, query, query_args)
         db_connection.commit()
