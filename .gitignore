@@ -2,5 +2,3 @@
 /venv
 .env
 /__pycache__
-database/__pycache__/db_connector.cpython-36.pyc
-__pycache__/app.cpython-36.pyc
