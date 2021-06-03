@@ -112,7 +112,8 @@
 
     <h1>Add Your Movement Type Below</h1>
     <div class="form">
-        <form action="" class="form-inline"action="/update/{{exercise_update.id}}" method ="POST" >
+        <!-- form action="" class="form-inline"action="/update/``exercise_update.id`` method ="POST"  -->
+        <form class="form-inline" method ="POST" >
             <div class="exercise-name-div" style="margin: auto;">
                 <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
                     movement type:</label><br>
@@ -122,10 +123,94 @@
             <div class="submit-button">
                 <input style="font-weight: bold; background-color:red;" type="submit" value="Submit Exercise" />
             </div>
-
-
         </form>
     </div>
+
+
+
+  <form id="myform" action="/update" method ="POST" >
+  <table style="width:75%">
+    <tr>
+      <th colspan="6" style="text-align: left;">
+        <label for="search-bar">Search exercises by name:</label>
+        <input class="search-bar" name="search-bar" type="text" placeholder="Enter exercise name here...">
+      </th>
+    </tr>
+    <tr>
+      <th style="width: 100px;">Exercise ID</th>
+      <th>Exercise Name</th>
+      <th>Training Type:
+      </th>
+      <th>Movement Type:
+      </th>
+      <th>Muscle Groups:
+      </th>
+    </tr>
+   {% for row in data %}
+    <tr>
+      {% for key in row.keys() %}
+      <td>
+      {% if row[key] is iterable and row[key] is not string %}    <!-- and row[key] is not mapping (for dictionaries) -->
+      {{ row[key] | join(',')}} 
+      {% else %}
+      {{ row[key] }} 
+      {% endif %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    <tr>
+        <td>enter text to update</td>
+        <td><input class="exercise-name" type="text" name="exercise_name" placeholder="Enter exercise name to update..."></td>
+        <td> 
+            <select multiple name="training" id="training">
+            {% for row in training %}
+                {% for key in row.keys() %}
+                <option value="{{row[key]}}">{{row[key]}}</option>
+                {% endfor %}
+            {% endfor %}
+            </select>
+        </td>
+         <td> 
+            <select multiple name="movement" id="movement">
+            {% for row in movement %}
+                {% for key in row.keys() %}
+                <option value="{{row[key]}}">{{row[key]}}</option>
+                {% endfor %}
+            {% endfor %}
+            </select>
+        </td>
+         <td> 
+            <select multiple name="muscle_groups" id="muscle_groups">
+            {% for row in muscle %}
+                {% for key in row.keys() %}
+                <option value="{{row[key]}}">{{row[key]}}</option>
+                {% endfor %}
+            {% endfor %}
+            </select>
+        </td>
+    </tr>
+    <tr>
+        <td>enter text to update</td>
+        <td><input name="update_name" type="text" placeholder="Update exercise name here..."></td>
+        <td><input name="update_train" type="text" placeholder="Update training type here..."></td>
+        <td><input name="update_move" type="text" placeholder="Update movement type here..."></td>
+        <td><input name="update_musc" type="text" placeholder="Update muscle group here..."></td>
+    </tr>
+    <tr>
+        <td align="center" colspan="6">
+            <button form="myform" type="submit" name="submit_button" value="submit">Submit</button> <button type="submit" name="delete_button" value="delete" >Delete</button>
+        </td>
+    </tr>
+  </table>
+  </form>
+</body>
+
+
+
+
+
+
 
 </body>
 

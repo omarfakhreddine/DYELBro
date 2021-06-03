@@ -54,7 +54,7 @@ def exercises():
         FROM Exercises, TrainingTypes  \
         WHERE Exercises.exerciseName = %s \
         AND TrainingTypes.trainingType= %s"
-        # this shows each differnt training although it duplicates it
+        # this shows each different training type although it duplicates it
         for i in training:
             query_args = (exercise_name, i)
             query_results = db.execute_query(db_connection, query, query_args)
@@ -115,7 +115,7 @@ def exercises():
     ON ExerciseMuscles.muscleId = MuscleGroups.muscleId"
     cursor = db.execute_query(db_connection=db_connection, query=get_all)
     results_all = cursor.fetchall() #data from database.
-    print(results_all) # prints how arrays look
+    #print(results_all) # prints how arrays look
     final_results = extract(results_all)
 
     return render_template("exercises.j2", data=final_results, training=training_results, 
@@ -143,6 +143,29 @@ def extract(tupleOfDicts):
                 mus.append(x['muscleGroup'])
         final.append({'exerciseId':exerciseId, 'exerciseName':exerciseName, 'trainingType':tra, 'movementType':mov, 'muscleGroup':mus})
     #print(final)
+    return final
+
+
+def extractRow(row):
+    to_keep = operator.itemgetter('exerciseId', 'exerciseName')
+    to_merge = operator.itemgetter('trainingType', 'movementType', 'muscleGroup')
+    li = []
+    li.append(row)
+    li.sort(key=to_keep)
+    getting = itertools.groupby(li, to_keep)
+    final = []
+    for (exerciseId, exerciseName), rest in getting:
+        tra = []
+        mov = []
+        mus = []
+        for x in rest:
+            if x['trainingType'] not in tra:
+                tra.append(x['trainingType'])
+            if x['movementType'] not in mov:
+                mov.append(x['movementType'])
+            if x['muscleGroup'] not in mus:
+                mus.append(x['muscleGroup'])
+        final.append({'exerciseId':exerciseId, 'exerciseName':exerciseName, 'trainingType':tra, 'movementType':mov, 'muscleGroup':mus})
     return final
 
 
@@ -208,62 +231,88 @@ def training_types():
     return render_template("training_types.j2", data=results)
 
 
-
 #@app.route('/update/<int:id>', methods = ['POST', 'GET'])
-#exercise_update = "SELECT distinct trainingType FROM TrainingTypes"
+#def update(id):
+@app.route('/update', methods = ['POST', 'GET'])
+def update():
+   
 
-#def update_exercise(id):
-    #if request.method == "POST":
-        #exercise_update = request.form.get('update_ex')
-        #db_connection.commit()
-        #redirect('/exercises')
+    # how do we get id????
+    if request.method == 'POST':
+        exercise_name = request.form.get('exercise_name')
+        # request.form.getlist to show each instance of training,movement,muscle_groups
+        training = request.form.getlist('training') 
+        movement = request.form.getlist('movement')
+        muscle_groups = request.form.getlist('muscle_groups')
 
-    #return render_template("update.j2", exercise_update = exercise_update)
+        query = "UPDATE Exercises SET exerciseName = %s WHERE exerciseID = 1" #should be %s
+        query_args = (exercise_name) 
+        query_results = db.execute_query(db_connection, query, [query_args])
+        db_connection.commit()
 
-     #<form action="/update/{{row.id}}" method="POST">
-      #    <button type="submit"> Update </button> <button>Delete</button>
-       # </form> put in exercise.j2
-  
-    #if request.method == 'GET':
+    # values for insert form dropdowns
+    get_training = "SELECT trainingType FROM TrainingTypes INNER JOIN ExerciseTrainings \
+    ON ExerciseTrainings.trainingId = TrainingTypes.trainingId \
+    INNER JOIN Exercises \
+    ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
+    WHERE Exercises.exerciseId = 1"
+    cursor = db.execute_query(db_connection=db_connection, query=get_training)
+    training_results = cursor.fetchall() #data from database.
 
-        #query = " SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, TrainingTypes.trainingType, \
-        #MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
-        #INNER JOIN ExerciseTrainings \
-        #ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
-        #INNER JOIN TrainingTypes \
-        #ON ExerciseTrainings.trainingId = TrainingTypes.trainingId \
-        #INNER JOIN ExerciseMovements \
-        #ON Exercises.exerciseId = ExerciseMovements.exerciseId \
-        #INNER JOIN MovementTypes \
-        #ON ExerciseMovements.movementId = MovementTypes.movementId \
-        #INNER JOIN ExerciseMuscles \
-        #ON Exercises.exerciseId = ExerciseMuscles.exerciseId  \
-        #INNER JOIN MuscleGroups  \
-        #ON ExerciseMuscles.muscleId = MuscleGroups.muscleId \
-        #WHERE Exercise.exerciseId = %s" 
-        #query_args = (id) 
-        #cursor = db.execute_query(db_connection=db_connection, query=get_it)
-        #results_it = cursor.fetchone() #data from database.
+    get_movement = "SELECT movementType FROM MovementTypes INNER JOIN ExerciseMovements \
+    ON ExerciseMovements.movementId = MovementTypes.movementId \
+    INNER JOIN Exercises \
+    ON Exercises.exerciseId = ExerciseMovements.exerciseId \
+    WHERE Exercises.exerciseId = 1" 
+    cursor = db.execute_query(db_connection=db_connection, query=get_movement)
+    movement_results = cursor.fetchall() #data from database.
 
-       # if results_it == None:
-        #    return "Not found"
+    get_muscle = "SELECT muscleGroup FROM MuscleGroups INNER JOIN ExerciseMuscles \
+    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId \
+    INNER JOIN Exercises \
+    ON Exercises.exerciseId = ExerciseMuscles.exerciseId \
+    WHERE Exercises.exerciseId = 1" 
+    cursor = db.execute_query(db_connection=db_connection, query=get_muscle)
+    muscle_results = cursor.fetchall() #data from database.
 
-        #get_data = "SELECT distinct trainingType FROM TrainingTypes"
-        #cursor = db.execute_query(db_connection=db_connection, query=get_data)
-        #results = cursor.fetchall() #data from database.
 
-        #return render_template("training_types.j2", data=results)
+    # a row from table 
+    get_row = "SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, TrainingTypes.trainingType, \
+    MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
+    INNER JOIN ExerciseTrainings \
+    ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
+    INNER JOIN TrainingTypes \
+    ON ExerciseTrainings.trainingId = TrainingTypes.trainingId \
+    INNER JOIN ExerciseMovements \
+    ON Exercises.exerciseId = ExerciseMovements.exerciseId \
+    INNER JOIN MovementTypes \
+    ON ExerciseMovements.movementId = MovementTypes.movementId \
+    INNER JOIN ExerciseMuscles \
+    ON Exercises.exerciseId = ExerciseMuscles.exerciseId  \
+    INNER JOIN MuscleGroups  \
+    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId WHERE Exercises.exerciseId = 1"
+    cursor = db.execute_query(db_connection=db_connection, query=get_row)
+    results_row = cursor.fetchone() #fetchone just gets row
+    #print(results_row) # prints how arrays look
+    
+    if results_row == None:
+        return "NOT FOUND"
+
+    final_results = extractRow(results_row)
+
+    #a_query = "SELECT exerciseId, exerciseName FROM Exercises"
+    #cursor = db.execute_query(db_connection=db_connection, query=a_query)
+    #a_query = cursor.fetchall() 
+    #print(a_query)
+    #final_results = extract(a_query) ???
+    
+    #return render_template("update.j2",data=final_results)
+
+    return render_template("update.j2", data=final_results, training=training_results, movement=movement_results, muscle=muscle_results)
+ 
 
         
-
-
-
-
-
-
-
-
-
+        
     # Listener
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 9191))

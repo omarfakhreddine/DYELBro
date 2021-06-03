@@ -27,6 +27,28 @@ def extract(tupleOfDicts):
     print(final)
 
 
+def getRow(row):
+    to_keep = operator.itemgetter('exerciseId', 'exerciseName')
+    to_merge = operator.itemgetter('trainingType', 'movementType', 'muscleGroup')
+    li = []
+    li.append(row)
+    li.sort(key=to_keep)
+    getting = itertools.groupby(li, to_keep)
+    final = []
+    for (exerciseId, exerciseName), rest in getting:
+        tra = []
+        mov = []
+        mus = []
+        for x in rest:
+            if x['trainingType'] not in tra:
+                tra.append(x['trainingType'])
+            if x['movementType'] not in mov:
+                mov.append(x['movementType'])
+            if x['muscleGroup'] not in mus:
+                mus.append(x['muscleGroup'])
+        final.append({'exerciseId':exerciseId, 'exerciseName':exerciseName, 'trainingType':tra, 'movementType':mov, 'muscleGroup':mus})
+    #print(tuple(final))
+    print(final)
 
 
 
@@ -70,5 +92,10 @@ results_all = (
 {'exerciseId': 3, 'exerciseName': 'squat', 'trainingType': 'anaerobic', 'movementType': 'hinge', 'muscleGroup': 'quads'}
 )
 
+row = {'exerciseId': 1, 'exerciseName': 'cry', 'trainingType': 'cardio', 'movementType': 'push', 'muscleGroup': 'biceps'}
+
 x = extract(results_all)
 print(x)
+
+y = getRow(row)
+print(y)

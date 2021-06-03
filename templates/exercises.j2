@@ -98,7 +98,7 @@
 
   <h1>Add Your Exercise Below</h1>
   <div class="form">
-    <form action="" class="form-inline" action="/exercises" method ="POST">
+    <form id="myform" class="form-inline" action="/exercises" method ="POST">
       <div class="exercise-name-div" style="margin: auto;">
         <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
           exercise:</label><br>
@@ -187,7 +187,7 @@
       </td>
       {% endfor %}
       <td>
-        <button>Update</button> <button>Delete</button>
+        <a href="/update"><button type="submit" name="update_button" value="update">Update</button></a><button type="submit" name="delete_button" value="delete" >Delete</button>
       </td>
     </tr>
     {% endfor %}
