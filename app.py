@@ -237,7 +237,7 @@ def training_types():
 def update():
    
 
-    # how do we get id????
+    # how do we get id???? stuck here ????
     if request.method == 'POST':
         exercise_name = request.form.get('exercise_name')
         # request.form.getlist to show each instance of training,movement,muscle_groups
@@ -249,6 +249,18 @@ def update():
         query_args = (exercise_name) 
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
+
+        # stuck here , how should we proceed??????
+        query = "UPDATE TrainingTypes INNER JOIN ExerciseTrainings \
+        ON TrainingTypes.trainingid = ExerciseTrainings.trainingId INNER JOIN Exercises \
+        ON ExerciseTrainings.exerciseId = Exercises.exerciseId SET TrainingTypes.trainingType = %s WHERE \
+        WHERE Exercises.exerciseId = 1" # should be %s
+        for i in training:
+            query_args = (i)
+            query_results = db.execute_query(db_connection, query, query_args)
+            db_connection.commit()
+
+
 
     # values for insert form dropdowns
     get_training = "SELECT trainingType FROM TrainingTypes INNER JOIN ExerciseTrainings \
