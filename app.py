@@ -2,7 +2,8 @@ from flask import Flask, render_template, request, redirect
 import os
 import json
 import database.db_connector as db
-
+import operator
+import itertools
 """
 MYSQL on hand Syntax.
 
@@ -36,44 +37,52 @@ def exercises():
     if request.method == "POST":
 
         exercise_name = request.form.get('exercise_name')
-        training = request.form.get('training')
-        movement = request.form.get('movement')
-        muscle_groups = request.form.get('muscle_groups')
+        # request.form.getlist to show each instance of training,movement,muscle_groups
+        training = request.form.getlist('training') 
+        movement = request.form.getlist('movement')
+        muscle_groups = request.form.getlist('muscle_groups')
         
+
         query = "INSERT INTO Exercises (exerciseName) VALUES (%s)"
         query_args = (exercise_name) 
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
+
 
         query = "INSERT INTO ExerciseTrainings (exerciseId, trainingId) \
         SELECT Exercises.exerciseId, TrainingTypes.trainingId \
         FROM Exercises, TrainingTypes  \
         WHERE Exercises.exerciseName = %s \
         AND TrainingTypes.trainingType= %s"
-        query_args = (exercise_name, training) 
-        query_results = db.execute_query(db_connection, query, query_args)
-        db_connection.commit()
+        # this shows each differnt training although it duplicates it
+        for i in training:
+            query_args = (exercise_name, i)
+            query_results = db.execute_query(db_connection, query, query_args)
+            db_connection.commit()
+        
 
         query = "INSERT INTO ExerciseMovements (exerciseId, movementId) \
         SELECT Exercises.exerciseId, MovementTypes.movementId \
         FROM Exercises, MovementTypes  \
         WHERE Exercises.exerciseName = %s \
         AND MovementTypes.movementType= %s"
-        query_args = (exercise_name, movement) 
-        query_results = db.execute_query(db_connection, query, query_args)
-        db_connection.commit()
+        for i in movement:
+            query_args = (exercise_name, i) 
+            query_results = db.execute_query(db_connection, query, query_args)
+            db_connection.commit()
 
         query = "INSERT INTO ExerciseMuscles (exerciseId, muscleId) \
         SELECT Exercises.exerciseId, MuscleGroups.muscleId \
         FROM Exercises, MuscleGroups  \
         WHERE Exercises.exerciseName = %s \
         AND MuscleGroups.muscleGroup= %s"
-        query_args = (exercise_name, muscle_groups) 
-        query_results = db.execute_query(db_connection, query, query_args)
-        db_connection.commit()
+        for i in muscle_groups:
+            query_args = (exercise_name, i) 
+            query_results = db.execute_query(db_connection, query, query_args)
+            db_connection.commit()
         
-        print("CHECK")
-
+        print("END OF POST")
+    
     
     # values for insert form dropdowns
     get_training = "SELECT trainingType FROM TrainingTypes"
@@ -87,6 +96,7 @@ def exercises():
     get_muscle = "SELECT muscleGroup FROM MuscleGroups"
     cursor = db.execute_query(db_connection=db_connection, query=get_muscle)
     muscle_results = cursor.fetchall() #data from database.
+
     
     # rows for table 
     get_all = "SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, TrainingTypes.trainingType, \
@@ -105,10 +115,38 @@ def exercises():
     ON ExerciseMuscles.muscleId = MuscleGroups.muscleId"
     cursor = db.execute_query(db_connection=db_connection, query=get_all)
     results_all = cursor.fetchall() #data from database.
+    print(results_all) # prints how arrays look
+    final_results = extract(results_all)
 
-    return render_template("exercises.j2", data=results_all, training=training_results, 
+    return render_template("exercises.j2", data=final_results, training=training_results, 
     movement=movement_results, muscle=muscle_results)
 
+
+
+def extract(tupleOfDicts):
+    to_keep = operator.itemgetter('exerciseId', 'exerciseName')
+    to_merge = operator.itemgetter('trainingType', 'movementType', 'muscleGroup')
+    listOfDicts = list(tupleOfDicts)
+    listOfDicts.sort(key=to_keep)
+    getting = itertools.groupby(listOfDicts, to_keep)
+    final = []
+    for (exerciseId, exerciseName), rest in getting:
+        tra = []
+        mov = []
+        mus = []
+        for x in rest:
+            if x['trainingType'] not in tra:
+                tra.append(x['trainingType'])
+            if x['movementType'] not in mov:
+                mov.append(x['movementType'])
+            if x['muscleGroup'] not in mus:
+                mus.append(x['muscleGroup'])
+        final.append({'exerciseId':exerciseId, 'exerciseName':exerciseName, 'trainingType':tra, 'movementType':mov, 'muscleGroup':mus})
+    #print(final)
+    return final
+
+
+  
     
 @app.route('/muscle_groups', methods=['GET', 'POST'])
 def muscle_groups():
