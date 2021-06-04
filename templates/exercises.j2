@@ -160,7 +160,8 @@
     <tr>
       <th colspan="6" style="text-align: left;">
         <label for="search-bar">Search exercises by name:</label>
-        <input class="search-bar" name="search-bar" type="text" placeholder="Enter exercise name here...">
+        <input form="myform" class="search-bar" name="search-bar" type="text" placeholder="Enter exercise name here...">
+        <button type="submit" name="search_button" value="search">Search</button
       </th>
     </tr>
     <tr>
@@ -187,7 +188,7 @@
       </td>
       {% endfor %}
       <td>
-        <a href="/update"><button type="submit" name="update_button" value="update">Update</button></a><button type="submit" name="delete_button" value="delete" >Delete</button>
+        <a href="/update/{{ row.exerciseId }}"><button type="submit" name="update_button" value="update">Update</button></a><a href="/delete/{{ row.exerciseId }}"><button type="submit" name="delete_button" value="delete">Delete</button></a>
       </td>
     </tr>
     {% endfor %}

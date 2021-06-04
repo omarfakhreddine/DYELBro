@@ -94,8 +94,25 @@ results_all = (
 
 row = {'exerciseId': 1, 'exerciseName': 'cry', 'trainingType': 'cardio', 'movementType': 'push', 'muscleGroup': 'biceps'}
 
-x = extract(results_all)
-print(x)
+fail = {'exerciseId': 4, 'exerciseName': 'four', 'trainingType': 'cardio', 'movementType': 'push', 'muscleGroup': 'biceps'}
 
-y = getRow(row)
-print(y)
+#x = extract(results_all)
+#print(x)
+
+#y = getRow(row)
+#print(y)
+
+z = getRow(fail)
+print(z)
+
+
+a = [{'exerciseId': 1, 'exerciseName': 'bench press', 'trainingType': ['cardio'], 'movementType': ['push'], 'muscleGroup': ['biceps']}, 
+{'exerciseId': 2, 'exerciseName': 'deadlift', 'trainingType': ['endurance'], 'movementType': ['pull'], 'muscleGroup': ['triceps']}, 
+{'exerciseId': 3, 'exerciseName': 'squat', 'trainingType': ['anaerobic'], 'movementType': ['hinge'], 'muscleGroup': ['quads']}, 
+{'exerciseId': 4, 'exerciseName': 'cry', 'trainingType': ['cardio', 'endurance'], 'movementType': ['push', 'pull'], 'muscleGroup': ['biceps', 'triceps']}]
+u = list(a)
+print(u)
+print(a[0])
+for row in a:
+    for key in row.keys():
+        print(row[key][0])

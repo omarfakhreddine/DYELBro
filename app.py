@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, url_for
 import os
 import json
 import database.db_connector as db
@@ -41,12 +41,26 @@ def exercises():
         training = request.form.getlist('training') 
         movement = request.form.getlist('movement')
         muscle_groups = request.form.getlist('muscle_groups')
+        #print(request.form.get('exercise_name'))
+
+        #for i in training:
+        #    print(i)
         
+
+        # implement search
+        #search_bar = request.form.get('search-bar')
+        #print(search_bar)
+        #if any(x.isalpha() or x.isdigit() for x in search_bar):
+        #    query = "SELECT Exercises (exerciseId, exerciseName) WHERE exerciseName = %s" 
+        #    query_args = (search_bar) 
+        #    query_results = db.execute_query(db_connection, query, query_args)
+        #    db_connection.commit()
 
         query = "INSERT INTO Exercises (exerciseName) VALUES (%s)"
         query_args = (exercise_name) 
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
+
 
 
         query = "INSERT INTO ExerciseTrainings (exerciseId, trainingId) \
@@ -59,7 +73,7 @@ def exercises():
             query_args = (exercise_name, i)
             query_results = db.execute_query(db_connection, query, query_args)
             db_connection.commit()
-        
+
 
         query = "INSERT INTO ExerciseMovements (exerciseId, movementId) \
         SELECT Exercises.exerciseId, MovementTypes.movementId \
@@ -98,8 +112,15 @@ def exercises():
     muscle_results = cursor.fetchall() #data from database.
 
     
+    #get_id = "SELECT exerciseId FROM Exercises"
+    #cursor = db.execute_query(db_connection=db_connection, query=get_id)
+    #all_id = cursor.fetchall() #data from database.
+    #print(all_id)
+  
+  
+    # originally had SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, ....
     # rows for table 
-    get_all = "SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, TrainingTypes.trainingType, \
+    get_all = "SELECT Exercises.exerciseId, Exercises.exerciseName, TrainingTypes.trainingType, \
     MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
     INNER JOIN ExerciseTrainings \
     ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
@@ -231,43 +252,52 @@ def training_types():
     return render_template("training_types.j2", data=results)
 
 
-#@app.route('/update/<int:id>', methods = ['POST', 'GET'])
-#def update(id):
-@app.route('/update', methods = ['POST', 'GET'])
-def update():
+@app.route('/update/<int:id>', methods = ['POST', 'GET'])
+def update(id):
+    print(id)
    
-
-    # how do we get id???? stuck here ????
     if request.method == 'POST':
-        exercise_name = request.form.get('exercise_name')
+        update_name = request.form.get('update_name')
         # request.form.getlist to show each instance of training,movement,muscle_groups
-        training = request.form.getlist('training') 
-        movement = request.form.getlist('movement')
-        muscle_groups = request.form.getlist('muscle_groups')
+        # might not need these
+        update_train = request.form.getlist('update_train') 
+        trainId = request.form.getlist('trainId') 
+        update_move = request.form.getlist('update_move')
+        update_musc = request.form.getlist('update_musc')
+        print(update_name)
 
-        query = "UPDATE Exercises SET exerciseName = %s WHERE exerciseID = 1" #should be %s
-        query_args = (exercise_name) 
-        query_results = db.execute_query(db_connection, query, [query_args])
-        db_connection.commit()
+        #for i in update_train:
+        #    print("update train =", i)
 
-        # stuck here , how should we proceed??????
-        query = "UPDATE TrainingTypes INNER JOIN ExerciseTrainings \
-        ON TrainingTypes.trainingid = ExerciseTrainings.trainingId INNER JOIN Exercises \
-        ON ExerciseTrainings.exerciseId = Exercises.exerciseId SET TrainingTypes.trainingType = %s WHERE \
-        WHERE Exercises.exerciseId = 1" # should be %s
-        for i in training:
-            query_args = (i)
+        #for u, h in zip(update_train, trainId):
+        #    print(u, h)
+
+        if any(x.isalpha() or x.isdigit() for x in update_name):
+            query = "UPDATE Exercises SET exerciseName = %s WHERE exerciseID = %s" 
+            query_args = (update_name, id ) 
             query_results = db.execute_query(db_connection, query, query_args)
             db_connection.commit()
+        
+        # what about insert new training name then 
 
+        # i dont think we need this: but it works but updates every instance
+        for u, h in zip(update_train, trainId):
+            query = "UPDATE TrainingTypes INNER JOIN ExerciseTrainings \
+            ON TrainingTypes.trainingid = ExerciseTrainings.trainingId INNER JOIN Exercises \
+            ON ExerciseTrainings.exerciseId = Exercises.exerciseId SET TrainingTypes.trainingType = %s \
+            WHERE Exercises.exerciseId = %s AND TrainingTypes.trainingId = %s" 
+            query_args = (u, id, h) # leave comma if only 1 argument
+            query_results = db.execute_query(db_connection, query, query_args)
+            db_connection.commit()
+    
 
-
-    # values for insert form dropdowns
-    get_training = "SELECT trainingType FROM TrainingTypes INNER JOIN ExerciseTrainings \
+    
+    # values to show user what to change
+    get_training = "SELECT TrainingTypes.trainingType, TrainingTypes.trainingId FROM TrainingTypes INNER JOIN ExerciseTrainings \
     ON ExerciseTrainings.trainingId = TrainingTypes.trainingId \
     INNER JOIN Exercises \
     ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
-    WHERE Exercises.exerciseId = 1"
+    WHERE Exercises.exerciseId = %s" % (id)
     cursor = db.execute_query(db_connection=db_connection, query=get_training)
     training_results = cursor.fetchall() #data from database.
 
@@ -275,7 +305,7 @@ def update():
     ON ExerciseMovements.movementId = MovementTypes.movementId \
     INNER JOIN Exercises \
     ON Exercises.exerciseId = ExerciseMovements.exerciseId \
-    WHERE Exercises.exerciseId = 1" 
+    WHERE Exercises.exerciseId = %s" % (id)
     cursor = db.execute_query(db_connection=db_connection, query=get_movement)
     movement_results = cursor.fetchall() #data from database.
 
@@ -283,13 +313,13 @@ def update():
     ON ExerciseMuscles.muscleId = MuscleGroups.muscleId \
     INNER JOIN Exercises \
     ON Exercises.exerciseId = ExerciseMuscles.exerciseId \
-    WHERE Exercises.exerciseId = 1" 
+    WHERE Exercises.exerciseId = %s" % (id)
     cursor = db.execute_query(db_connection=db_connection, query=get_muscle)
     muscle_results = cursor.fetchall() #data from database.
 
 
     # a row from table 
-    get_row = "SELECT distinct (Exercises.exerciseId), Exercises.exerciseName, TrainingTypes.trainingType, \
+    get_row = "SELECT Exercises.exerciseId, Exercises.exerciseName, TrainingTypes.trainingType, \
     MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
     INNER JOIN ExerciseTrainings \
     ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
@@ -302,7 +332,7 @@ def update():
     INNER JOIN ExerciseMuscles \
     ON Exercises.exerciseId = ExerciseMuscles.exerciseId  \
     INNER JOIN MuscleGroups  \
-    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId WHERE Exercises.exerciseId = 1"
+    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId WHERE Exercises.exerciseId = %s" % (id)
     cursor = db.execute_query(db_connection=db_connection, query=get_row)
     results_row = cursor.fetchone() #fetchone just gets row
     #print(results_row) # prints how arrays look
@@ -322,7 +352,80 @@ def update():
 
     return render_template("update.j2", data=final_results, training=training_results, movement=movement_results, muscle=muscle_results)
  
+@app.route('/delete/<int:id>')
+def delete(id):
+    #delete_exercise = request.form.get('trainId') 
 
+   # if POST and make sure the POST GET STUFF IS in the app route and un-comment get stuff below
+   
+    print(id)
+    query = "DELETE FROM Exercises WHERE exerciseID = %s" 
+    query_args = (id, ) 
+    query_results = db.execute_query(db_connection, query, query_args)
+    db_connection.commit()
+
+    return redirect(url_for('exercises'))
+    """
+    # values to show user what to change
+    get_training = "SELECT TrainingTypes.trainingType, TrainingTypes.trainingId FROM TrainingTypes INNER JOIN ExerciseTrainings \
+    ON ExerciseTrainings.trainingId = TrainingTypes.trainingId \
+    INNER JOIN Exercises \
+    ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
+    WHERE Exercises.exerciseId = %s" % (id)
+    cursor = db.execute_query(db_connection=db_connection, query=get_training)
+    training_results = cursor.fetchall() #data from database.
+
+    get_movement = "SELECT movementType FROM MovementTypes INNER JOIN ExerciseMovements \
+    ON ExerciseMovements.movementId = MovementTypes.movementId \
+    INNER JOIN Exercises \
+    ON Exercises.exerciseId = ExerciseMovements.exerciseId \
+    WHERE Exercises.exerciseId = %s" % (id)
+    cursor = db.execute_query(db_connection=db_connection, query=get_movement)
+    movement_results = cursor.fetchall() #data from database.
+
+    get_muscle = "SELECT muscleGroup FROM MuscleGroups INNER JOIN ExerciseMuscles \
+    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId \
+    INNER JOIN Exercises \
+    ON Exercises.exerciseId = ExerciseMuscles.exerciseId \
+    WHERE Exercises.exerciseId = %s" % (id)
+    cursor = db.execute_query(db_connection=db_connection, query=get_muscle)
+    muscle_results = cursor.fetchall() #data from database.
+
+
+    # a row from table 
+    get_row = "SELECT Exercises.exerciseId, Exercises.exerciseName, TrainingTypes.trainingType, \
+    MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
+    INNER JOIN ExerciseTrainings \
+    ON Exercises.exerciseId = ExerciseTrainings.exerciseId \
+    INNER JOIN TrainingTypes \
+    ON ExerciseTrainings.trainingId = TrainingTypes.trainingId \
+    INNER JOIN ExerciseMovements \
+    ON Exercises.exerciseId = ExerciseMovements.exerciseId \
+    INNER JOIN MovementTypes \
+    ON ExerciseMovements.movementId = MovementTypes.movementId \
+    INNER JOIN ExerciseMuscles \
+    ON Exercises.exerciseId = ExerciseMuscles.exerciseId  \
+    INNER JOIN MuscleGroups  \
+    ON ExerciseMuscles.muscleId = MuscleGroups.muscleId WHERE Exercises.exerciseId = %s" % (id)
+    cursor = db.execute_query(db_connection=db_connection, query=get_row)
+    results_row = cursor.fetchone() #fetchone just gets row
+    #print(results_row) # prints how arrays look
+    
+    if results_row == None:
+        return "NOT FOUND"
+
+    final_results = extractRow(results_row)
+
+    #a_query = "SELECT exerciseId, exerciseName FROM Exercises"
+    #cursor = db.execute_query(db_connection=db_connection, query=a_query)
+    #a_query = cursor.fetchall() 
+    #print(a_query)
+    #final_results = extract(a_query) ???
+    
+    #return render_template("update.j2",data=final_results)
+
+    return render_template("delete.j2", data=final_results, training=training_results, movement=movement_results, muscle=muscle_results)
+    """
         
         
     # Listener
