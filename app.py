@@ -442,7 +442,8 @@ def delete(id):
 
    # if POST and make sure the POST GET STUFF IS in the app route and un-comment get stuff below
    
-    print(id)
+    #print(id)
+    # Delete query for Exercise table that satisfies project requirements
     query = "DELETE FROM Exercises WHERE exerciseID = %s" 
     query_args = (id, ) 
     query_results = db.execute_query(db_connection, query, query_args)
