@@ -124,7 +124,7 @@
           Hold control and click for multiple selections...
         </div>
         <select multiple name="movement" id="movement">
-          {% for row in movement %}
+          {% for row in movement %} 
             {% for key in row.keys() %}
             <option value="{{row[key]}}">{{row[key]}}</option>
             {% endfor %}
@@ -158,10 +158,12 @@
   </p>
   <table style="width:75%">
     <tr>
-      <th colspan="6" style="text-align: left;">
+      <th colspan="6" >
         <label for="search-bar">Search exercises by name:</label>
-        <input form="myform" class="search-bar" name="search-bar" type="text" placeholder="Enter exercise name here...">
-        <button type="submit" name="search_button" value="search">Search</button
+        <form action="/search" method = "POST">
+        <input name="search-bar" type="text" placeholder="Enter exercise name here...">
+        <button type="submit" name="search_button" value="search">Search</button>
+        </form>
       </th>
     </tr>
     <tr>

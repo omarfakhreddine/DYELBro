@@ -125,22 +125,11 @@
       <th>Muscle Groups:
       </th>
     </tr>
-   {% for row in data %}
     <tr>
-      {% for key in row.keys() %}
-      <td>
-      {% if row[key] is iterable and row[key] is not string %}    <!-- and row[key] is not mapping (for dictionaries) -->
-      {{ row[key] | join(',')}} 
-      {% else %}
-      {{ row[key] }} 
-      {% endif %}
-      </td>
-      {% endfor %}
-    </tr>
-    {% endfor %}
-    <tr>
-        <td>enter text to update</td>
-        <td><input class="exercise-name" type="text" name="update_name" placeholder="Enter exercise name to update..."></td>
+        {% for row in data %}
+        <td>{{row.exerciseId}}</td>
+        <td><input class="exercise-name" type="text" name="update_name" value="{{row.exerciseName}}"></td>
+        {% endfor %}
         <td> 
             {% for row in training %}
                 <input name="update_train" value ="{{row.trainingType}}">
@@ -149,18 +138,14 @@
         </td>
          <td> 
             {% for row in movement %}
-                {% for key in row.keys() %}
-                {{row[key]}}
-                <input name="update_move" value="{{row[key]}}">
-                {% endfor %}
+                <input name="update_move" value ="{{row.movementType}}">
+                <input type="hidden" id="moveId" name="moveId" value="{{row.movementId}}">
             {% endfor %}
         </td>
          <td> 
             {% for row in muscle %}
-                {% for key in row.keys() %}
-                {{row[key]}}
-                <input name="update_musc" value="{{row[key]}}">
-                {% endfor %}
+                <input name="update_musc" value ="{{row.muscleGroup}}">
+                <input type="hidden" id="muscId" name="muscId" value="{{row.muscleId}}">
             {% endfor %}
         </td>
     </tr>

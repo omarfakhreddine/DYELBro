@@ -52,6 +52,27 @@ def getRow(row):
 
 
 
+def extractRow(row):
+    to_keep = operator.itemgetter('exerciseId', 'exerciseName')
+    to_merge = operator.itemgetter('trainingType', 'movementType', 'muscleGroup')
+    li = []
+    li.append(row)
+    li.sort(key=to_keep)
+    getting = itertools.groupby(li, to_keep)
+    final = []
+    for (exerciseId, exerciseName), rest in getting:
+        tra = []
+        mov = []
+        mus = []
+        for x in rest:
+            if x['trainingType'] not in tra:
+                tra.append(x['trainingType'])
+            if x['movementType'] not in mov:
+                mov.append(x['movementType'])
+            if x['muscleGroup'] not in mus:
+                mus.append(x['muscleGroup'])
+        final.append({'exerciseId':exerciseId, 'exerciseName':exerciseName, 'trainingType':tra, 'movementType':mov, 'muscleGroup':mus})
+    return final
 
 
 
