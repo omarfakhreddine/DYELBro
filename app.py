@@ -42,6 +42,8 @@ def exercises():
         movement = request.form.getlist('movement')
         muscle_groups = request.form.getlist('muscle_groups')
         #print(request.form.get('exercise_name'))
+        if exercise_name.IsNullOrEmpty:
+            print("alerty")
 
         # Insert queries to insert into all M to M relationships via transitional tables
         query = "INSERT INTO Exercises (exerciseName) VALUES (%s)"
@@ -220,13 +222,14 @@ def search():
 def muscle_groups():
 
     if request.method == 'POST':
-
+     
         muscle_groups = request.form.get('muscle_groups')
         print("The muscle group is", muscle_groups)
-        query = "INSERT INTO MuscleGroups (muscleGroup) VALUES (%s)"
-        query_args = (muscle_groups) 
-        query_results = db.execute_query(db_connection, query, [query_args])
-        db_connection.commit()
+        if any(x.isalpha() or x.isdigit() for x in muscle_groups):
+            query = "INSERT INTO MuscleGroups (muscleGroup) VALUES (%s)"
+            query_args = (muscle_groups) 
+            query_results = db.execute_query(db_connection, query, [query_args])
+            db_connection.commit()
 
     
     get_data = "SELECT distinct muscleGroup FROM MuscleGroups"
@@ -235,7 +238,24 @@ def muscle_groups():
         
 
     return render_template("muscle_groups.j2", data=results)
+
+@app.route('/search_muscle', methods=['GET','POST'])
+def search_muscle():
+    if request.method == 'POST':
+
+        search_bar = request.form.get('search-bar')
+
+        if search_bar.isalpha() or search_bar.isdigit():
+            get_data = "SELECT muscleGroup FROM MuscleGroups WHERE MuscleGroups.muscleGroup= '%s' "  % (search_bar)
+            cursor = db.execute_query(db_connection=db_connection, query=get_data)
+            results = cursor.fetchall() #data from database.
+
+            return render_template("muscle_groups.j2", data=results)
+        else:
+            return redirect(url_for('muscle_groups'))
+
     
+
 
 @app.route('/movement_types', methods=['GET', 'POST'])
 def movement_types():
@@ -244,17 +264,32 @@ def movement_types():
 
         movement_type = request.form.get('movement')
         print("The movement type is", movement_type)
-
-        query = "INSERT INTO MovementTypes (movementType) VALUES (%s)"
-        query_args = (movement_type) 
-        query_results = db.execute_query(db_connection, query, [query_args])
-        db_connection.commit()
+        if any(x.isalpha() or x.isdigit() for x in movement_type):
+            query = "INSERT INTO MovementTypes (movementType) VALUES (%s)"
+            query_args = (movement_type) 
+            query_results = db.execute_query(db_connection, query, [query_args])
+            db_connection.commit()
 
     get_data = "SELECT distinct movementType FROM MovementTypes"
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
 
     return render_template("movement_types.j2", data=results)
+
+
+
+@app.route('/search_movement', methods=['GET','POST'])
+def search_movement():
+    if request.method == 'POST':
+
+        search_bar = request.form.get('search-bar')
+
+        
+        get_data = "SELECT movementType FROM MovementTypes WHERE MovementTypes.movementType = '%s' "  % (search_bar)
+        cursor = db.execute_query(db_connection=db_connection, query=get_data)
+        results = cursor.fetchall() #data from database.
+
+        return render_template("movement_types.j2", data=results)
 
     
 @app.route('/training_types', methods=['GET','POST'])
@@ -263,7 +298,13 @@ def training_types():
     if request.method == 'POST':
 
         training = request.form.get('training')
+        search_bar = request.form.get('search-bar')
+
         print("The training type is", training)
+        query = "SELECT trainingType from TrainingTypes WHERE trainingType = (%s)"
+        query_args = (search_bar, ) 
+        query_results = db.execute_query(db_connection, query, [query_args])
+        db_connection.commit()
 
         query = "INSERT INTO TrainingTypes (trainingType) VALUES (%s)"
         query_args = (training) 
@@ -275,6 +316,20 @@ def training_types():
     results = cursor.fetchall() #data from database.
 
     return render_template("training_types.j2", data=results)
+
+@app.route('/search_training', methods=['GET','POST'])
+def search_training():
+    if request.method == 'POST':
+
+        search_bar = request.form.get('search-bar')
+
+   
+        get_data = "SELECT trainingType FROM TrainingTypes WHERE TrainingTypes.trainingType = '%s' "  % (search_bar)
+        cursor = db.execute_query(db_connection=db_connection, query=get_data)
+        results = cursor.fetchall() #data from database.
+
+        return render_template("training_types.j2", data=results)
+
 
 
 @app.route('/update/<int:id>', methods = ['POST', 'GET'])
@@ -291,10 +346,10 @@ def update(id):
         moveId = request.form.getlist('moveId') 
         update_musc = request.form.getlist('update_musc')
         muscId = request.form.getlist('muscId') 
-
+        
     
-        #for u, h in zip(update_train, trainId):
-        #    print(u, h)
+        for u, h in zip(update_musc, muscId):
+             print(u, h)
         
         # check if there was any input to update exercise name
         if any(x.isalpha() or x.isdigit() for x in update_name):
@@ -302,27 +357,6 @@ def update(id):
             query_args = (update_name, id ) 
             query_results = db.execute_query(db_connection, query, query_args)
             db_connection.commit()
-
-
-        #query = "UPDATE TrainingTypes SET exerName = %s WHERE exerciseID = %s" 
-
-        
-        # what about insert new training name then 
-        
-        # works but updates every instance
-        #if not any(x.isalpha() or x.isdigit() for x in update_train):
-        #    for u, h in zip(update_train, trainId):
-        #        query = "UPDATE TrainingTypes INNER JOIN ExerciseTrainings \
-        #        ON TrainingTypes.trainingid = ExerciseTrainings.trainingId INNER JOIN Exercises \
-        #        ON ExerciseTrainings.exerciseId = Exercises.exerciseId SET TrainingTypes.trainingType = NULL \
-        #        WHERE Exercises.exerciseId = %s AND TrainingTypes.trainingId = %s" 
-        #        query_args = (id, h) # leave comma if only 1 argument
-        #        query_results = db.execute_query(db_connection, query, query_args)
-        #        db_connection.commit()
-        #else:
-        #if not any(x.isalpha() or x.isdigit() for x in update_train):
-        #if not u.isalpha() or u.isdigit():
-
 
         # for each element in training type in cell run queries to update values using name and id
         for u, h in zip(update_train, trainId):
@@ -338,7 +372,7 @@ def update(id):
             else:
                 # if value to update is not in table, insert
                 query1 = "INSERT INTO TrainingTypes (trainingType)\
-                SELECT * FROM (SELECT %s AS trainingType) AS X WHERE NOT EXISTS \
+                SELECT %s FROM TrainingTypes AS new WHERE NOT EXISTS \
                 (SELECT trainingType FROM TrainingTypes WHERE trainingType = %s) LIMIT 1"  # cambia esta vaina
                 query_args = (u, u) # leave comma if only 1 argument
                 query_results = db.execute_query(db_connection, query1, query_args)
@@ -353,27 +387,49 @@ def update(id):
                 query_args = (u, h, id) # leave comma if only 1 argument
                 query_results = db.execute_query(db_connection, query2, query_args)
                 db_connection.commit()
-        """
+    
         # for each element in movement type in cell run queries to update values using name and id
         for u, h in zip(update_move, moveId):
             # if value to update is not in table, insert
                 query1 = "INSERT INTO MovementTypes (movementType)\
-                SELECT * FROM (SELECT %s AS movementType) AS X WHERE NOT EXISTS \
-                (SELECT movementType FROM MovmentTypes WHERE movementType = %s) LIMIT 1"
+                SELECT %s FROM MovementTypes AS new WHERE NOT EXISTS \
+                (SELECT movementType FROM MovementTypes WHERE movementType = %s) LIMIT 1"
                 query_args = (u, u) # leave comma if only 1 argument
                 query_results = db.execute_query(db_connection, query1, query_args)
                 db_connection.commit()
                 
                 # update corresponding id in transitional table
                 query2 = "UPDATE ExerciseMovements INNER JOIN MovementTypes \
-                ON MovementTypes.movementId = MovementTrainings.movementId INNER JOIN Exercises \
-                ON ExerciseMovements.movementId = Exercises.exerciseId \
+                ON MovementTypes.movementId = ExerciseMovements.movementId INNER JOIN Exercises \
+                ON ExerciseMovements.exerciseId = Exercises.exerciseId \
                 SET ExerciseMovements.movementId = (SELECT movementId FROM MovementTypes WHERE MovementTypes.movementType = %s) \
-                WHERE ExerciseMovments.movementId = %s AND ExerciseMovements.exerciseId = %s " 
+                WHERE ExerciseMovements.movementId = %s AND ExerciseMovements.exerciseId = %s " 
                 query_args = (u, h, id) # leave comma if only 1 argument
                 query_results = db.execute_query(db_connection, query2, query_args)
                 db_connection.commit()
-        """
+
+        # for each element in movement type in cell run queries to update values using name and id
+        for u, h in zip(update_musc, muscId):
+            # if value to update is not in table, insert
+                query1 = "INSERT INTO MuscleGroups (muscleGroup)\
+                SELECT %s FROM MuscleGroups AS new WHERE NOT EXISTS \
+                (SELECT muscleGroup FROM MuscleGroups WHERE muscleGroup = %s) LIMIT 1"
+                query_args = (u, u) # leave comma if only 1 argument
+                query_results = db.execute_query(db_connection, query1, query_args)
+                db_connection.commit()
+                
+                # update corresponding id in transitional table
+                query2 = "UPDATE ExerciseMuscles INNER JOIN MuscleGroups \
+                ON MuscleGroups.muscleId = ExerciseMuscles.muscleId INNER JOIN Exercises \
+                ON ExerciseMuscles.exerciseId = Exercises.exerciseId \
+                SET ExerciseMuscles.muscleId = (SELECT muscleId FROM MuscleGroups WHERE MuscleGroups.muscleGroup = %s) \
+                WHERE ExerciseMuscles.muscleId = %s AND ExerciseMuscles.exerciseId = %s " 
+                query_args = (u, h, id) # leave comma if only 1 argument
+                query_results = db.execute_query(db_connection, query2, query_args)
+                db_connection.commit()
+        
+        return redirect(url_for('exercises'))
+     
             
     
     # values to render what to change for each table
@@ -385,7 +441,7 @@ def update(id):
     cursor = db.execute_query(db_connection=db_connection, query=get_training)
     training_results = cursor.fetchall() #data from database.
 
-    get_movement = "SELECT movementType FROM MovementTypes INNER JOIN ExerciseMovements \
+    get_movement = "SELECT MovementTypes.movementType, MovementTypes.movementId FROM MovementTypes INNER JOIN ExerciseMovements \
     ON ExerciseMovements.movementId = MovementTypes.movementId \
     INNER JOIN Exercises \
     ON Exercises.exerciseId = ExerciseMovements.exerciseId \
@@ -393,7 +449,7 @@ def update(id):
     cursor = db.execute_query(db_connection=db_connection, query=get_movement)
     movement_results = cursor.fetchall() #data from database.
 
-    get_muscle = "SELECT muscleGroup FROM MuscleGroups INNER JOIN ExerciseMuscles \
+    get_muscle = "SELECT MuscleGroups.muscleGroup, MuscleGroups.muscleId FROM MuscleGroups INNER JOIN ExerciseMuscles \
     ON ExerciseMuscles.muscleId = MuscleGroups.muscleId \
     INNER JOIN Exercises \
     ON Exercises.exerciseId = ExerciseMuscles.exerciseId \
