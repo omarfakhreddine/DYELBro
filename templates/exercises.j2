@@ -102,7 +102,7 @@
       <div class="exercise-name-div" style="margin: auto;">
         <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
           exercise:</label><br>
-        <input class="exercise-name" type="text" name="exercise_name" placeholder="Enter exercise name here...">
+        <input required class="exercise-name" type="text" name="exercise_name" placeholder="Enter exercise name here...">
       </div>
       <ul style="list-style-type: none;">
         <div class="ul-title">Please select relevant Training Types:</div>
@@ -110,9 +110,10 @@
           Hold control and click for multiple selections...
         </div>
         <select multiple name="training" id="training">
+        <option value="" disabled selected>Choose</option> 
           {% for row in training %}
             {% for key in row.keys() %}
-            <option value="{{row[key]}}">{{row[key]}}</option>
+            <option value="{{row[key] if row[key]}}">{{row[key] if row[key]}}</option>
             {% endfor %}
           {% endfor %}
         </select>
@@ -123,8 +124,9 @@
         <div style="font-size: 12px; font-weight: bold;">
           Hold control and click for multiple selections...
         </div>
-        <select multiple name="movement" id="movement">
-          {% for row in movement %} 
+        <select multiple required name="movement" id="movement">
+        <option value="" disabled selected>Choose</option> 
+          {% for row in movement %}
             {% for key in row.keys() %}
             <option value="{{row[key]}}">{{row[key]}}</option>
             {% endfor %}
@@ -137,7 +139,8 @@
         <div style="font-size: 12px; font-weight: bold;">
           Hold control and click for multiple selections...
         </div>
-        <select multiple name="muscle_groups" id="muscle_groups">
+        <select multiple required name="muscle_groups" id="muscle_groups">
+        <option value="" disabled selected>Choose</option> 
           {% for row in muscle %}
             {% for key in row.keys() %}
             <option value="{{row[key]}}">{{row[key]}}</option>
@@ -161,7 +164,7 @@
       <th colspan="6" >
         <label for="search-bar">Search exercises by name:</label>
         <form action="/search" method = "POST">
-        <input name="search-bar" type="text" placeholder="Enter exercise name here...">
+        <input required name="search-bar" type="text" placeholder="Enter exercise name here...">
         <button type="submit" name="search_button" value="search">Search</button>
         </form>
       </th>

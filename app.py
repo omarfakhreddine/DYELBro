@@ -33,7 +33,9 @@ def root():
 
 @app.route('/exercises', methods=['POST', 'GET'])
 def exercises():
-
+    # Note: 7 tables in total, 1 table(Exercises) has M:M to 3 tables (TrainingTypes, MovementTypes, MuscleGroups)
+    # via 3 composite tables (ExerciseTrainings, ExerciseMovements, ExerciseMuscles)
+    # All M:M between Exercises and the 3 tables are represented on this page 
     if request.method == "POST":
 
         exercise_name = request.form.get('exercise_name')
@@ -42,16 +44,42 @@ def exercises():
         movement = request.form.getlist('movement')
         muscle_groups = request.form.getlist('muscle_groups')
         #print(request.form.get('exercise_name'))
-        if exercise_name.IsNullOrEmpty:
-            print("alerty")
+
 
         # Insert queries to insert into all M to M relationships via transitional tables
         query = "INSERT INTO Exercises (exerciseName) VALUES (%s)"
         query_args = (exercise_name) 
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
+        
+        # Decided to allow user to choose None option for training table 
+        # this is not required but it matches required NULLable UPDATE for training table
+        # query1 to take care of NULL values, query2 to take care of non-NULL
+        for i in training:
+            if i is '':
+                query1 = "INSERT INTO ExerciseTrainings (exerciseId, trainingId) \
+                SELECT Exercises.exerciseId, TrainingTypes.trainingId \
+                FROM Exercises, TrainingTypes  \
+                WHERE Exercises.exerciseName = %s \
+                AND TrainingTypes.trainingId= 1"
+                # iterate through training list
+                query_args = (exercise_name, )
+                query_results = db.execute_query(db_connection, query1, query_args)
+                db_connection.commit()
+            else:
+                query2 = "INSERT INTO ExerciseTrainings (exerciseId, trainingId) \
+                SELECT Exercises.exerciseId, TrainingTypes.trainingId \
+                FROM Exercises, TrainingTypes  \
+                WHERE Exercises.exerciseName = %s \
+                AND TrainingTypes.trainingType= %s"
+                # iterate through training list
+                query_args = (exercise_name, i)
+                query_results = db.execute_query(db_connection, query2, query_args)
+                db_connection.commit()
 
 
+        # will decide if want NULL option(above) or not (below) for Training Table with team
+        """
         query = "INSERT INTO ExerciseTrainings (exerciseId, trainingId) \
         SELECT Exercises.exerciseId, TrainingTypes.trainingId \
         FROM Exercises, TrainingTypes  \
@@ -62,6 +90,8 @@ def exercises():
             query_args = (exercise_name, i)
             query_results = db.execute_query(db_connection, query, query_args)
             db_connection.commit()
+        """
+        
 
 
         query = "INSERT INTO ExerciseMovements (exerciseId, movementId) \
@@ -90,7 +120,8 @@ def exercises():
     
     
     # values to show in form dropdowns
-    get_training = "SELECT trainingType FROM TrainingTypes WHERE TrainingTypes.trainingType != 'None' "
+    get_training = "SELECT trainingType FROM TrainingTypes"
+    #get_training = "SELECT trainingType FROM TrainingTypes WHERE TrainingTypes.trainingType != 'None' "
     cursor = db.execute_query(db_connection=db_connection, query=get_training)
     training_results = cursor.fetchall() #data from database.
 
@@ -104,7 +135,9 @@ def exercises():
 
   
     # originally had SELECT distinct (Exercises.exerciseId), .....
-    # render rows for table 
+    # render rows for table on Exercises Page
+    # all M : M relationships between Exercises and TrainingTypes, MovementTypes, and MuscleGroups
+    # will be displayed on this page using composite tables
     get_all = "SELECT Exercises.exerciseId, Exercises.exerciseName, TrainingTypes.trainingType, \
     MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
     INNER JOIN ExerciseTrainings \
@@ -195,6 +228,7 @@ def search():
         cursor = db.execute_query(db_connection=db_connection, query=get_muscle)
         muscle_results = cursor.fetchall() #data from database.
         
+        # will display all M:M relationships via composite tables
         # render rows for table 
         get_all = "SELECT Exercises.exerciseId, Exercises.exerciseName, TrainingTypes.trainingType, \
         MovementTypes.movementType, MuscleGroups.muscleGroup FROM Exercises \
@@ -225,14 +259,14 @@ def muscle_groups():
      
         muscle_groups = request.form.get('muscle_groups')
         print("The muscle group is", muscle_groups)
-        if any(x.isalpha() or x.isdigit() for x in muscle_groups):
-            query = "INSERT INTO MuscleGroups (muscleGroup) VALUES (%s)"
-            query_args = (muscle_groups) 
-            query_results = db.execute_query(db_connection, query, [query_args])
-            db_connection.commit()
+        # INSERT requirement 
+        query = "INSERT INTO MuscleGroups (muscleGroup) VALUES (%s)"
+        query_args = (muscle_groups) 
+        query_results = db.execute_query(db_connection, query, [query_args])
+        db_connection.commit()
 
-    
-    get_data = "SELECT distinct muscleGroup FROM MuscleGroups"
+    # SELECT requirement
+    get_data = "SELECT muscleGroup FROM MuscleGroups"
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
         
@@ -242,18 +276,15 @@ def muscle_groups():
 @app.route('/search_muscle', methods=['GET','POST'])
 def search_muscle():
     if request.method == 'POST':
-
         search_bar = request.form.get('search-bar')
 
-        if search_bar.isalpha() or search_bar.isdigit():
-            get_data = "SELECT muscleGroup FROM MuscleGroups WHERE MuscleGroups.muscleGroup= '%s' "  % (search_bar)
-            cursor = db.execute_query(db_connection=db_connection, query=get_data)
-            results = cursor.fetchall() #data from database.
+    
+        get_data = "SELECT muscleGroup FROM MuscleGroups WHERE MuscleGroups.muscleGroup= '%s' "  % (search_bar)
+        cursor = db.execute_query(db_connection=db_connection, query=get_data)
+        results = cursor.fetchall() #data from database.
 
-            return render_template("muscle_groups.j2", data=results)
-        else:
-            return redirect(url_for('muscle_groups'))
-
+        return render_template("muscle_groups.j2", data=results)
+     
     
 
 
@@ -264,13 +295,13 @@ def movement_types():
 
         movement_type = request.form.get('movement')
         print("The movement type is", movement_type)
-        if any(x.isalpha() or x.isdigit() for x in movement_type):
-            query = "INSERT INTO MovementTypes (movementType) VALUES (%s)"
-            query_args = (movement_type) 
-            query_results = db.execute_query(db_connection, query, [query_args])
-            db_connection.commit()
-
-    get_data = "SELECT distinct movementType FROM MovementTypes"
+        # INSERT requirement 
+        query = "INSERT INTO MovementTypes (movementType) VALUES (%s)"
+        query_args = (movement_type) 
+        query_results = db.execute_query(db_connection, query, [query_args])
+        db_connection.commit()
+    # SELECT requirement
+    get_data = "SELECT movementType FROM MovementTypes"
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
 
@@ -301,16 +332,14 @@ def training_types():
         search_bar = request.form.get('search-bar')
 
         print("The training type is", training)
-        query = "SELECT trainingType from TrainingTypes WHERE trainingType = (%s)"
-        query_args = (search_bar, ) 
-        query_results = db.execute_query(db_connection, query, [query_args])
-        db_connection.commit()
-
+        
+        # INSERT requirement 
         query = "INSERT INTO TrainingTypes (trainingType) VALUES (%s)"
         query_args = (training) 
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
 
+    # SELECT requirement
     get_data = "SELECT distinct trainingType FROM TrainingTypes WHERE TrainingTypes.trainingType != 'None' "
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
@@ -335,7 +364,9 @@ def search_training():
 @app.route('/update/<int:id>', methods = ['POST', 'GET'])
 def update(id):
     print(id)
-   
+    # UPDATE requirement, will update Exercise entity who has M:M relationships
+    # with TrainingTypes, MuscleGroups, and MovementTypes via composite tables
+    # Will also implement NULLable update requirement on TrainingTypes entity
     if request.method == 'POST':
 
         update_name = request.form.get('update_name')
@@ -351,16 +382,15 @@ def update(id):
         for u, h in zip(update_musc, muscId):
              print(u, h)
         
-        # check if there was any input to update exercise name
-        if any(x.isalpha() or x.isdigit() for x in update_name):
-            query = "UPDATE Exercises SET exerciseName = %s WHERE exerciseID = %s" 
-            query_args = (update_name, id ) 
-            query_results = db.execute_query(db_connection, query, query_args)
-            db_connection.commit()
+        # update exercise name
+        query = "UPDATE Exercises SET exerciseName = %s WHERE exerciseID = %s" 
+        query_args = (update_name, id ) 
+        query_results = db.execute_query(db_connection, query, query_args)
+        db_connection.commit()
 
         # for each element in training type in cell run queries to update values using name and id
         for u, h in zip(update_train, trainId):
-            # null update training type to fulfill project requirements
+            # NULLable UPDATE on  TrainingTypes entity to fulfill project requirements
             if not u.isalpha() or u.isdigit():
                 queryNull = "UPDATE ExerciseTrainings INNER JOIN TrainingTypes \
                 ON TrainingTypes.trainingId = ExerciseTrainings.trainingId INNER JOIN Exercises \
@@ -378,7 +408,7 @@ def update(id):
                 query_results = db.execute_query(db_connection, query1, query_args)
                 db_connection.commit()
 
-                # update corresponding id in transitional table
+                # update corresponding id in composite table
                 query2 = "UPDATE ExerciseTrainings INNER JOIN TrainingTypes \
                 ON TrainingTypes.trainingId = ExerciseTrainings.trainingId INNER JOIN Exercises \
                 ON ExerciseTrainings.exerciseId = Exercises.exerciseId \
@@ -398,7 +428,7 @@ def update(id):
                 query_results = db.execute_query(db_connection, query1, query_args)
                 db_connection.commit()
                 
-                # update corresponding id in transitional table
+                # update corresponding id in composite table
                 query2 = "UPDATE ExerciseMovements INNER JOIN MovementTypes \
                 ON MovementTypes.movementId = ExerciseMovements.movementId INNER JOIN Exercises \
                 ON ExerciseMovements.exerciseId = Exercises.exerciseId \
@@ -496,15 +526,12 @@ def update(id):
 def delete(id):
     #delete_exercise = request.form.get('trainId') 
 
-   # if POST and make sure the POST GET STUFF IS in the app route and un-comment get stuff below
-   
-    #print(id)
-    # Delete query for Exercise table that satisfies project requirements
+    # DELETE query for Exercise table that satisfies project requirements
     query = "DELETE FROM Exercises WHERE exerciseID = %s" 
     query_args = (id, ) 
     query_results = db.execute_query(db_connection, query, query_args)
     db_connection.commit()
-
+    # delete row and return to Exercises main page
     return redirect(url_for('exercises'))
 
                 

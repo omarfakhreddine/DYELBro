@@ -107,16 +107,16 @@
         <a href="/exercises">Exercises</a>
         <a href="/training_types">Training Types</a>
         <a href="/movement_types">Movement Types</a>
-        <a href="/muscle_groups">Muscle Groups</a>
+        <a href="/muscle_groups">Muscle Grups</a>
     </div>
 
     <h1>Add Your Muscle Group Below</h1>
     <div class="form">
-        <form action="" class="form-inline" action="/muscle_groups" method ="POST">
+        <form class="form-inline" action="/muscle_groups" method ="POST">
             <div class="exercise-name-div" style="margin: auto;">
                 <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
                     muscle group:</label><br>
-                <input class="exercise-name" type="text" name="muscle_groups" placeholder="Enter muscle group here...">
+                <input required class="exercise-name" type="text" name="muscle_groups" placeholder="Enter muscle group here...">
             </div>
 
             <div class="submit-button">
@@ -135,7 +135,7 @@
             <th colspan="5" style="text-align: left;">
                 <label for="search-bar">Search training type by name:</label>
                 <form action="/search_muscle" method = "POST">
-                <input class="search-bar" name="search-bar" type="text" placeholder="Enter muscle group here...">
+                <input required class="search-bar" name="search-bar" type="text" placeholder="Enter muscle group here...">
                 </form>
             </th>
         </tr>

@@ -112,11 +112,11 @@
 
     <h1>Add Your Movement Type Below</h1>
     <div class="form">
-        <form action="" class="form-inline"action="/movement_types" method ="POST" >
+        <form class="form-inline" action="/movement_types" method ="POST" >
             <div class="exercise-name-div" style="margin: auto;">
                 <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
                     movement type:</label><br>
-                <input class="exercise-name" type="text" name="movement" placeholder="Enter movement type here...">
+                <input required class="exercise-name" type="text" name="movement" placeholder="Enter movement type here...">
             </div>
 
             <div class="submit-button">
@@ -135,7 +135,7 @@
             <th colspan="5" style="text-align: left;">
                 <label for="search-bar">Search training type by name:</label>
                 <form action="/search_movement" method = "POST">
-                <input class="search-bar" name="search-bar" type="text" placeholder="Enter movement type here...">
+                <input required class="search-bar" name="search-bar" type="text" placeholder="Enter movement type here...">
                 </form>
             </th>
         </tr>
