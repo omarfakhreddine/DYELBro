@@ -17,7 +17,7 @@ TODO:
 `mysql -u cs340_YOUROSUUSERNAME -pMYSQLPASSWORD -h classmysql.engr.oregonstate.edu`
                                                       # access flip mysql servers
 
-`ET FOREIGN_KEY_CHECKS=0;`                            # turns off FKs so you can import the ddq, then set 0 to 1 after sourcing ddq
+`SET FOREIGN_KEY_CHECKS=0;`                            # turns off FKs so you can import the ddq, then set 0 to 1 after sourcing ddq
                                                     
 `source ./venv/bin/activate`                          # activate virtual environment
 
