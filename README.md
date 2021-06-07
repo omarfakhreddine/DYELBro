@@ -9,6 +9,7 @@ TODO:
 - Filter/search functionality in exercises page for other entities besides exercise name
 - drop down lists for insertion
 - drop down lists for update (show row above form)
+- create and use jinja template for each page to avoid redundant code
 - fix search bar CSS/HTML on Training Types, Muscle Groups and Movement Types pages
 
 
