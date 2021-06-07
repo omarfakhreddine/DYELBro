@@ -15,7 +15,7 @@ TODO:
 # Useful commands:
 
 `mysql -u cs340_YOUROSUUSERNAME -pMYSQLPASSWORD -h classmysql.engr.oregonstate.edu`
-                                                      # use the above code to access flip mysql servers
+                                                      # access flip mysql servers
                                                     
 `source ./venv/bin/activate`                          # activate virtual environment
 
