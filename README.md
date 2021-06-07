@@ -4,9 +4,11 @@ This repo is for our CS 340 portfolio database project using Flask/Python and My
 The purpose of this web app is to enable users to interact with the exercise database using CRUD functionality.
 
 TODO:
-- Change exercises table to have multiple training types/movement types/muscle groups in one cell
-- implement update functionality (same as guide with new route)
-- implement delete functionality (same as guide)
+- implement update functionality (for other tables besides Exercises)
+- implement delete functionality (for other tables besides Exercises)
+- drop down lists for insertion
+- drop down lists for update (show row above form)
+- fix search bar CSS/HTML on Training Types, Muscle Groups and Movement Types pages
 
 
 Useful commands:
