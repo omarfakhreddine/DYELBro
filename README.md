@@ -14,16 +14,15 @@ TODO:
 
 Useful commands:
 
-mysql -u cs340_YOUROSUUSERNAME -pMYSQLPASSWORD -h classmysql.engr.oregonstate.edu
-
-                                                    # use the above code to access flip mysql servers
+`mysql -u cs340_YOUROSUUSERNAME -pMYSQLPASSWORD -h classmysql.engr.oregonstate.edu`
+# use the above code to access flip mysql servers
                                                     
-source ./venv/bin/activate                          # activate virtual environment
+`source ./venv/bin/activate`                          # activate virtual environment
 
-python -m flask run -h 0.0.0.0 -p PORT# --reload    # run app with flask, change port
+`python -m flask run -h 0.0.0.0 -p PORT# --reload`    # run app with flask, change port
 
-gunicorn --bind 0.0.0.0:PORT# wsgi:app -D           # run the app permanantly (gunicorn)
+`gunicorn --bind 0.0.0.0:PORT# wsgi:app -D`           # run the app permanantly (gunicorn)
 
-ps ufx | grep gunicorn                              # see gunicorn processes
+`ps ufx | grep gunicorn`                              # see gunicorn processes
 
-kill PROCESS#                                       # kill top process after above com.
+`kill PROCESS#`                                       # kill top process after above com.
