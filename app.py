@@ -169,10 +169,12 @@ def extract(tupleOfDicts):
     listOfDicts.sort(key=to_keep)
     getting = itertools.groupby(listOfDicts, to_keep)
     final = []
+    # group by exercise attributes and the rest of the attributes
     for (exerciseId, exerciseName), rest in getting:
         tra = []
         mov = []
         mus = []
+        # make a list for each attribute that can have multiple options 
         for x in rest:
             if x['trainingType'] not in tra:
                 tra.append(x['trainingType'])
@@ -184,7 +186,7 @@ def extract(tupleOfDicts):
     #print(final)
     return final
 
-# function to extract data from only one row
+# function to extract data from only one row for proper rendering
 def extractRow(row):
     to_keep = operator.itemgetter('exerciseId', 'exerciseName')
     to_merge = operator.itemgetter('trainingType', 'movementType', 'muscleGroup')
@@ -193,10 +195,12 @@ def extractRow(row):
     li.sort(key=to_keep)
     getting = itertools.groupby(li, to_keep)
     final = []
+    # group by exercise attributes and the rest of the attributes
     for (exerciseId, exerciseName), rest in getting:
         tra = []
         mov = []
         mus = []
+        # make a list for each attribute that can have multiple options 
         for x in rest:
             if x['trainingType'] not in tra:
                 tra.append(x['trainingType'])
@@ -259,13 +263,13 @@ def muscle_groups():
      
         muscle_groups = request.form.get('muscle_groups')
         print("The muscle group is", muscle_groups)
-        # INSERT requirement 
+        # INSERT requirement for MuscleGroups
         query = "INSERT INTO MuscleGroups (muscleGroup) VALUES (%s)"
         query_args = (muscle_groups) 
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
 
-    # SELECT requirement
+    # SELECT requirement for MuscleGroups
     get_data = "SELECT muscleGroup FROM MuscleGroups"
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
@@ -295,12 +299,12 @@ def movement_types():
 
         movement_type = request.form.get('movement')
         print("The movement type is", movement_type)
-        # INSERT requirement 
+        # INSERT requirement for MovementTypes
         query = "INSERT INTO MovementTypes (movementType) VALUES (%s)"
         query_args = (movement_type) 
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
-    # SELECT requirement
+    # SELECT requirement for MovementTypes
     get_data = "SELECT movementType FROM MovementTypes"
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
@@ -333,13 +337,13 @@ def training_types():
 
         print("The training type is", training)
         
-        # INSERT requirement 
+        # INSERT requirement for TraningTypes
         query = "INSERT INTO TrainingTypes (trainingType) VALUES (%s)"
         query_args = (training) 
         query_results = db.execute_query(db_connection, query, [query_args])
         db_connection.commit()
 
-    # SELECT requirement
+    # SELECT requirement for TrainingTypes
     get_data = "SELECT distinct trainingType FROM TrainingTypes WHERE TrainingTypes.trainingType != 'None' "
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
