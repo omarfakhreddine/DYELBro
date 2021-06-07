@@ -61,8 +61,7 @@
         }
 
         .search-bar[type=text]:focus {
-            width: 84%;
-            transition: all 0.4s ease-in-out;
+            transition: all 0.4s;
             background-color: lightblue;
         }
 
@@ -107,20 +106,20 @@
         <a href="/exercises">Exercises</a>
         <a href="/training_types">Training Types</a>
         <a href="/movement_types">Movement Types</a>
-        <a href="/muscle_groups">Muscle Groups</a>
+        <a href="/muscle_groups">Muscle Grups</a>
     </div>
 
     <h1>Add Your Muscle Group Below</h1>
     <div class="form">
-        <form action="" class="form-inline" action="/muscle_groups" method ="POST">
+        <form class="form-inline" action="/muscle_groups" method ="POST">
             <div class="exercise-name-div" style="margin: auto;">
                 <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
                     muscle group:</label><br>
-                <input class="exercise-name" type="text" name="muscle_groups" placeholder="Enter muscle group here...">
+                <input required class="exercise-name" type="text" name="muscle_groups" placeholder="Enter muscle group here...">
             </div>
 
             <div class="submit-button">
-                <input style="font-weight: bold; background-color:red;" type="submit" value="Submit Exercise" />
+                <input style="font-weight: bold; background-color:red;" type="submit" value="Submit Muscle Group" />
             </div>
 
 
@@ -128,28 +127,36 @@
     </div>
 
     <p class="page-description" style="font-weight: bold; font-size: large;">Below you can find all the created saved
-        exercises. You can search for a specific one by typing its name in the search bar.
+        muscle groups. You can search for a specific one by typing its name in the search bar.
     </p>
+    <!-- Table with jinja templating to render from queries -->
     <table style="width:75%">
         <tr>
             <th colspan="5" style="text-align: left;">
-                <label for="search-bar">Search training type by name:</label>
-                <input class="search-bar" name="search-bar" type="text" placeholder="Enter muscle group here...">
+                <form action="/search_muscle" method = "POST">
+                <label for="search-bar">Search muscle group type by name:</label>
+                <input required class="search-bar" name="search-bar" type="text" placeholder="Enter muscle group here...">
+                <button type="submit" name="search_button" value="search">Search</button>
+                </form>
             </th>
         </tr>
         <tr>
             <th>Muscle Group:</th>
+            <!--
             <th style="width: 150px;">
                 <div>Modify</div>
             </th>
+            -->
         </tr>
         {% for row in data %}
         <tr>
             {% for key in row.keys() %}
             <td>{{ row[key] }}</td>
+            <!--
             <td>
                 <button>Update</button> <button>Delete</button>
             </td>
+            -->
             {% endfor %}
         </tr>
         {% endfor %}

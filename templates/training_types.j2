@@ -61,8 +61,7 @@
         }
 
         .search-bar[type=text]:focus {
-            width: 84%;
-            transition: all 0.4s ease-in-out;
+            transition: all 0.4s;
             background-color: lightblue;
         }
 
@@ -112,15 +111,15 @@
 
     <h1>Add Your Training Type Below</h1>
     <div class="form">
-        <form action="" class="form-inline" action="/training_types" method ="POST" >
+        <form  class="form-inline" action="/training_types" method ="POST" >
             <div class="exercise-name-div" style="margin: auto;">
                 <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
                     training type:</label><br>
-                <input class="exercise-name" type="text" name="training" placeholder="Enter training type here...">
+                <input required class="exercise-name" type="text" name="training" placeholder="Enter training type here...">
             </div>
 
             <div class="submit-button">
-                <input style="font-weight: bold; background-color:red;" type="submit" value="Submit Exercise" />
+                <input style="font-weight: bold; background-color:red;" type="submit" value="Submit Training Type" />
             </div>
 
 
@@ -128,28 +127,36 @@
     </div>
 
     <p class="page-description" style="font-weight: bold; font-size: large;">Below you can find all the created saved
-        exercises. You can search for a specific one by typing its name in the search bar.
+        training types. You can search for a specific one by typing its name in the search bar.
     </p>
+    <!-- Table with jinja templating to render from queries -->
     <table style="width:75%">
         <tr>
             <th colspan="5" style="text-align: left;">
+                <form action="/search_training" method = "POST">
                 <label for="search-bar">Search training type by name:</label>
-                <input class="search-bar" name="search-bar" type="text" placeholder="Enter training type here...">
+                <input required class="search-bar" name="search-bar" type="text" placeholder="Enter training type here...">
+                <button type="submit" name="search_button" value="search">Search</button>
+                </form>
             </th>
         </tr>
         <tr>
             <th>Training Type:</th>
+            <!--
             <th style="width: 150px;">
                 <div>Modify</div>
             </th>
+            -->
         </tr>
         {% for row in data %}
         <tr>
             {% for key in row.keys() %}
             <td>{{ row[key] }}</td>
+            <!--
             <td>
                 <button>Update</button> <button>Delete</button>
             </td>
+            -->
             {% endfor %}
         </tr>
         {% endfor %}

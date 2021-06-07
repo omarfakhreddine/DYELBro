@@ -52,8 +52,7 @@
       transition: all 0.4s ease-in-out;
     }
     .search-bar[type=text]:focus {
-      width: 86%;
-      transition: all 0.4s ease-in-out;
+      transition: all 0.4s;
       background-color: lightblue;
     }
     .form-inline button {
@@ -98,11 +97,11 @@
 
   <h1>Add Your Exercise Below</h1>
   <div class="form">
-    <form action="" class="form-inline" action="/exercises" method ="POST">
+    <form id="myform" class="form-inline" action="/exercises" method ="POST">
       <div class="exercise-name-div" style="margin: auto;">
         <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
           exercise:</label><br>
-        <input class="exercise-name" type="text" name="exercise_name" placeholder="Enter exercise name here...">
+        <input required class="exercise-name" type="text" name="exercise_name" placeholder="Enter exercise name here...">
       </div>
       <ul style="list-style-type: none;">
         <div class="ul-title">Please select relevant Training Types:</div>
@@ -110,9 +109,10 @@
           Hold control and click for multiple selections...
         </div>
         <select multiple name="training" id="training">
+        <option value="" disabled selected>Choose</option> 
           {% for row in training %}
             {% for key in row.keys() %}
-            <option value="{{row[key]}}">{{row[key]}}</option>
+            <option value="{{row[key] if row[key]}}">{{row[key] if row[key]}}</option>
             {% endfor %}
           {% endfor %}
         </select>
@@ -123,7 +123,8 @@
         <div style="font-size: 12px; font-weight: bold;">
           Hold control and click for multiple selections...
         </div>
-        <select multiple name="movement" id="movement">
+        <select multiple required name="movement" id="movement">
+        <option value="" disabled selected>Choose</option> 
           {% for row in movement %}
             {% for key in row.keys() %}
             <option value="{{row[key]}}">{{row[key]}}</option>
@@ -137,7 +138,8 @@
         <div style="font-size: 12px; font-weight: bold;">
           Hold control and click for multiple selections...
         </div>
-        <select multiple name="muscle_groups" id="muscle_groups">
+        <select multiple required name="muscle_groups" id="muscle_groups">
+        <option value="" disabled selected>Choose</option> 
           {% for row in muscle %}
             {% for key in row.keys() %}
             <option value="{{row[key]}}">{{row[key]}}</option>
@@ -156,11 +158,15 @@
   <p class="page-description" style="font-weight: bold; font-size: large;">Below you can find all the created saved
     exercises. You can search for a specific one by typing its name in the search bar.
   </p>
+  <!-- Table with jinja templating to render from queries -->
   <table style="width:75%">
     <tr>
-      <th colspan="6" style="text-align: left;">
+      <th colspan="6" >
         <label for="search-bar">Search exercises by name:</label>
-        <input class="search-bar" name="search-bar" type="text" placeholder="Enter exercise name here...">
+        <form action="/search" method = "POST">
+        <input required class="search-bar" name="search-bar" type="text" placeholder="Enter exercise name here...">
+        <button type="submit" name="search_button" value="search">Search</button>
+        </form>
       </th>
     </tr>
     <tr>
@@ -178,10 +184,16 @@
    {% for row in data %}
     <tr>
       {% for key in row.keys() %}
-      <td>{{ row[key] }}</td>
+      <td>
+      {% if row[key] is iterable and row[key] is not string %}    <!-- and row[key] is not mapping (for dictionaries) -->
+      {{ row[key] | join(', ')}} 
+      {% else %}
+      {{ row[key] }} 
+      {% endif %}
+      </td>
       {% endfor %}
       <td>
-        <button>Update</button> <button>Delete</button>
+        <a href="/update/{{ row.exerciseId }}"><button type="submit" name="update_button" value="update">Update</button></a><a href="/delete/{{ row.exerciseId }}"><button type="submit" name="delete_button" value="delete">Delete</button></a>
       </td>
     </tr>
     {% endfor %}

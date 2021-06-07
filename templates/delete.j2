@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>DYELBro - Movement Types</title>
-    <link rel="stylesheet" href=".\static\css\style.css" type="text/css">
+    <title>DYELBro - Delete Page</title>
+    <link rel="stylesheet" href= "{{ url_for('static',filename='css/style.css') }}" type="text/css">
     <style>
         table,
         th,
@@ -61,7 +61,8 @@
         }
 
         .search-bar[type=text]:focus {
-            transition: all 0.4s;
+            width: 84%;
+            transition: all 0.4s ease-in-out;
             background-color: lightblue;
         }
 
@@ -98,7 +99,7 @@
 <body>
     <!-- Link below to home page-->
     <a href="/">
-        <img style="width: 40%; padding-bottom: 20px;" class="title" src="./static/img/title.png" type="image/png">
+        <img style="width: 40%; padding-bottom: 20px;" class="title" src= "{{ url_for('static',filename='img/title.png') }}" type="image/png">
     </a>
 
     <!-- Link below to lists and add exercise page-->
@@ -109,58 +110,69 @@
         <a href="/muscle_groups">Muscle Groups</a>
     </div>
 
-    <h1>Add Your Movement Type Below</h1>
-    <div class="form">
-        <form class="form-inline" action="/movement_types" method ="POST" >
-            <div class="exercise-name-div" style="margin: auto;">
-                <label for="exercise_name" style="font-weight: bold;">Please enter the name of the
-                    movement type:</label><br>
-                <input required class="exercise-name" type="text" name="movement" placeholder="Enter movement type here...">
-            </div>
-
-            <div class="submit-button">
-                <input style="font-weight: bold; background-color:red;" type="submit" value="Submit Movement Type" />
-            </div>
-
-
-        </form>
-    </div>
-
-    <p class="page-description" style="font-weight: bold; font-size: large;">Below you can find all the created saved
-        movement types. You can search for a specific one by typing its name in the search bar.
-    </p>
-    <!-- Table with jinja templating to render from queries -->
-    <table style="width:75%">
-        <tr>
-            <th colspan="5" style="text-align: left;">
-                <form action="/search_movement" method = "POST">
-                <label for="search-bar">Search movement type by name:</label>
-                <input required class="search-bar" name="search-bar" type="text" placeholder="Enter movement type here...">
-                <button type="submit" name="search_button" value="search">Search</button>
-                </form>
-            </th>
-        </tr>
-        <tr>
-            <th>Movement Type:</th>
-            <!--
-            <th style="width: 150px;">
-                <div>Modify</div>
-            </th>
-            -->
-        </tr>
-        {% for row in data %}
-        <tr>
-            {% for key in row.keys() %}
-            <td>{{ row[key] }}</td>
-            <!--
-            <td>
-                <button>Update</button> <button>Delete</button>
-            </td>
-            -->
+ <h1>Delete Exercise</h1>
+ <div class="form">
+<!-- Table with jinja templating to render from queries -->
+  <form id="myform" action="" method ="POST" class="form-inline">
+  <table style="width:75%">
+    <tr>
+      <th style="width: 100px;">Exercise ID</th>
+      <th>Exercise Name</th>
+      <th>Training Type:
+      </th>
+      <th>Movement Type:
+      </th>
+      <th>Muscle Groups:
+      </th>
+    </tr>
+   {% for row in data %}
+    <tr>
+      {% for key in row.keys() %}
+      <td>
+      {% if row[key] is iterable and row[key] is not string %}    <!-- and row[key] is not mapping (for dictionaries) -->
+      {{ row[key] | join(',')}} 
+      {% else %}
+      {{ row[key] }} 
+      {% endif %}
+      </td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+    <tr>
+        <td>enter text to update</td>
+        <td><input class="exercise-name" type="text" name="delete_name" placeholder="Enter exercise name to delete..."></td>
+        <td> 
+            {% for row in training %}
+                <input name="delete_train" value ="{{row.trainingType}}">
+                <input type="hidden" id="trainId" name="trainId" value="{{row.trainingId}}">
             {% endfor %}
-        </tr>
-        {% endfor %}
-    </table>
+        </td>
+         <td> 
+            {% for row in movement %}
+                {% for key in row.keys() %}
+                {{row[key]}}
+                <input name="delete_move" value="{{row[key]}}">
+                {% endfor %}
+            {% endfor %}
+        </td>
+         <td> 
+            {% for row in muscle %}
+                {% for key in row.keys() %}
+                {{row[key]}}
+                <input name="delete_musc" value="{{row[key]}}">
+                {% endfor %}
+            {% endfor %}
+        </td>
+    </tr>
+    <tr>
+        <td align="center" colspan="6">
+            <button form="myform" type="submit" name="submit_button" value="submit" style="font-weight: bold; background-color:red;" >Submit</button> 
+        </td>
+    </tr>
+  </table>
+  </form>
+  </div>
 </body>
+
 
 </html>
