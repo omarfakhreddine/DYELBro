@@ -186,7 +186,7 @@
       {% for key in row.keys() %}
       <td>
       {% if row[key] is iterable and row[key] is not string %}    <!-- and row[key] is not mapping (for dictionaries) -->
-      {{ row[key] | join(',')}} 
+      {{ row[key] | join(', ')}} 
       {% else %}
       {{ row[key] }} 
       {% endif %}
