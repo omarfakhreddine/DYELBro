@@ -12,10 +12,10 @@ TODO:
 - fix search bar CSS/HTML on Training Types, Muscle Groups and Movement Types pages
 
 
-Useful commands:
+# Useful commands:
 
 `mysql -u cs340_YOUROSUUSERNAME -pMYSQLPASSWORD -h classmysql.engr.oregonstate.edu`
-# use the above code to access flip mysql servers
+                                                      # use the above code to access flip mysql servers
                                                     
 `source ./venv/bin/activate`                          # activate virtual environment
 
