@@ -6,6 +6,7 @@ The purpose of this web app is to enable users to interact with the exercise dat
 TODO:
 - implement update functionality (for other tables besides Exercises)
 - implement delete functionality (for other tables besides Exercises)
+- Filter/search functionality in exercises page for other entities besides exercise name
 - drop down lists for insertion
 - drop down lists for update (show row above form)
 - fix search bar CSS/HTML on Training Types, Muscle Groups and Movement Types pages
