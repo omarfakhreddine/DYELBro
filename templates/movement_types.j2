@@ -61,8 +61,7 @@
         }
 
         .search-bar[type=text]:focus {
-            width: 84%;
-            transition: all 0.4s ease-in-out;
+            transition: all 0.4s;
             background-color: lightblue;
         }
 
@@ -128,34 +127,38 @@
     </div>
 
     <p class="page-description" style="font-weight: bold; font-size: large;">Below you can find all the created saved
-        exercises. You can search for a specific one by typing its name in the search bar.
+        movement types. You can search for a specific one by typing its name in the search bar.
     </p>
     <table style="width:75%">
         <tr>
             <th colspan="5" style="text-align: left;">
-                <label for="search-bar">Search training type by name:</label>
                 <form action="/search_movement" method = "POST">
+                <label for="search-bar">Search movement type by name:</label>
                 <input required class="search-bar" name="search-bar" type="text" placeholder="Enter movement type here...">
+                <button type="submit" name="search_button" value="search">Search</button>
                 </form>
             </th>
         </tr>
         <tr>
             <th>Movement Type:</th>
+            <!--
             <th style="width: 150px;">
                 <div>Modify</div>
             </th>
+            -->
         </tr>
         {% for row in data %}
         <tr>
             {% for key in row.keys() %}
             <td>{{ row[key] }}</td>
+            <!--
             <td>
                 <button>Update</button> <button>Delete</button>
             </td>
+            -->
             {% endfor %}
         </tr>
         {% endfor %}
-        </tr>
     </table>
 </body>
 

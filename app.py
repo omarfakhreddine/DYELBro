@@ -403,7 +403,7 @@ def update(id):
                 # if value to update is not in table, insert
                 query1 = "INSERT INTO TrainingTypes (trainingType)\
                 SELECT %s FROM TrainingTypes AS new WHERE NOT EXISTS \
-                (SELECT trainingType FROM TrainingTypes WHERE trainingType = %s) LIMIT 1"  # cambia esta vaina
+                (SELECT trainingType FROM TrainingTypes WHERE trainingType = %s) LIMIT 1"  
                 query_args = (u, u) # leave comma if only 1 argument
                 query_results = db.execute_query(db_connection, query1, query_args)
                 db_connection.commit()
@@ -527,7 +527,7 @@ def delete(id):
     #delete_exercise = request.form.get('trainId') 
 
     # DELETE query for Exercise table that satisfies project requirements
-    query = "DELETE FROM Exercises WHERE exerciseID = %s" 
+    query = "DELETE FROM Exercises WHERE exerciseId = %s" 
     query_args = (id, ) 
     query_results = db.execute_query(db_connection, query, query_args)
     db_connection.commit()

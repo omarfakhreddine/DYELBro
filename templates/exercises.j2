@@ -52,8 +52,7 @@
       transition: all 0.4s ease-in-out;
     }
     .search-bar[type=text]:focus {
-      width: 86%;
-      transition: all 0.4s ease-in-out;
+      transition: all 0.4s;
       background-color: lightblue;
     }
     .form-inline button {
@@ -164,7 +163,7 @@
       <th colspan="6" >
         <label for="search-bar">Search exercises by name:</label>
         <form action="/search" method = "POST">
-        <input required name="search-bar" type="text" placeholder="Enter exercise name here...">
+        <input required class="search-bar" name="search-bar" type="text" placeholder="Enter exercise name here...">
         <button type="submit" name="search_button" value="search">Search</button>
         </form>
       </th>
@@ -186,7 +185,7 @@
       {% for key in row.keys() %}
       <td>
       {% if row[key] is iterable and row[key] is not string %}    <!-- and row[key] is not mapping (for dictionaries) -->
-      {{ row[key] | join(',')}} 
+      {{ row[key] | join(', ')}} 
       {% else %}
       {{ row[key] }} 
       {% endif %}
