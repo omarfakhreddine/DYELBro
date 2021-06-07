@@ -8,4 +8,4 @@ MarkupSafe==1.1.1
 mysqlclient==2.0.3
 python-dotenv==0.17.1
 Werkzeug==1.0.1
-flask-boostrap==3.3.7.1
+flask-bootstrap==3.3.7.1
