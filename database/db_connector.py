@@ -32,6 +32,8 @@ def execute_query(db_connection=None, query=None, query_params=()):
 
     '''
 
+    db_connection.ping(True)
+    
     if db_connection is None:
         print("No connection to the database found! Have you called connect_to_database() first?")
         return None
@@ -40,6 +42,7 @@ def execute_query(db_connection=None, query=None, query_params=()):
         print("query is empty! Please pass a SQL query in query")
         return None
 
+    
     print("Executing %s with %s" % (query, query_params))
     # Create a cursor to execute query. Why? Because apparently they optimize execution by retaining a reference according to PEP0249
     cursor = db_connection.cursor(MySQLdb.cursors.DictCursor)

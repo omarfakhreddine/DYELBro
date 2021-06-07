@@ -124,17 +124,17 @@ def exercises():
     #get_training = "SELECT trainingType FROM TrainingTypes WHERE TrainingTypes.trainingType != 'None' "
     cursor = db.execute_query(db_connection=db_connection, query=get_training)
     training_results = cursor.fetchall() #data from database.
-    cursor.close()
+    
 
     get_movement = "SELECT movementType FROM MovementTypes"
     cursor = db.execute_query(db_connection=db_connection, query=get_movement)
     movement_results = cursor.fetchall() #data from database.
-    cursor.close()
+    
 
     get_muscle = "SELECT muscleGroup FROM MuscleGroups"
     cursor = db.execute_query(db_connection=db_connection, query=get_muscle)
     muscle_results = cursor.fetchall() #data from database.
-    cursor.close()
+    
 
   
     # originally had SELECT distinct (Exercises.exerciseId), .....
@@ -159,7 +159,7 @@ def exercises():
     results_all = cursor.fetchall() #data from database.
     #print(results_all) # prints how arrays look
     final_results = extract(results_all) # extract data from tuple of dictionaries
-    cursor.close()
+    
 
     return render_template("exercises.j2", data=final_results, training=training_results, 
     movement=movement_results, muscle=muscle_results)
@@ -229,17 +229,17 @@ def search():
         get_training = "SELECT trainingType FROM TrainingTypes WHERE TrainingTypes.trainingType != 'None' "
         cursor = db.execute_query(db_connection=db_connection, query=get_training)
         training_results = cursor.fetchall() #data from database.
-        cursor.close()
+        
         
         get_movement = "SELECT movementType FROM MovementTypes"
         cursor = db.execute_query(db_connection=db_connection, query=get_movement)
         movement_results = cursor.fetchall() #data from database.
-        cursor.close()
+        
 
         get_muscle = "SELECT muscleGroup FROM MuscleGroups"
         cursor = db.execute_query(db_connection=db_connection, query=get_muscle)
         muscle_results = cursor.fetchall() #data from database.
-        cursor.close()
+        
         
         # will display all M:M relationships via composite tables
         # render rows for table 
@@ -261,7 +261,7 @@ def search():
         results_all = cursor.fetchall() #data from database.
         #print(results_all) # prints how arrays look
         final_results = extract(results_all) # extract data for proper rendering
-        cursor.close()
+        
         return render_template("exercises.j2", data=final_results, training=training_results, movement=movement_results, muscle=muscle_results)
             
   
@@ -283,7 +283,7 @@ def muscle_groups():
     get_data = "SELECT muscleGroup FROM MuscleGroups"
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
-    cursor.close()
+    
 
     return render_template("muscle_groups.j2", data=results)
 
@@ -296,7 +296,7 @@ def search_muscle():
         get_data = "SELECT muscleGroup FROM MuscleGroups WHERE MuscleGroups.muscleGroup= '%s' "  % (search_bar)
         cursor = db.execute_query(db_connection=db_connection, query=get_data)
         results = cursor.fetchall() #data from database.
-        cursor.close()
+        
 
         return render_template("muscle_groups.j2", data=results)
      
@@ -319,7 +319,7 @@ def movement_types():
     get_data = "SELECT movementType FROM MovementTypes"
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
-    cursor.close()
+    
 
     return render_template("movement_types.j2", data=results)
 
@@ -335,7 +335,7 @@ def search_movement():
         get_data = "SELECT movementType FROM MovementTypes WHERE MovementTypes.movementType = '%s' "  % (search_bar)
         cursor = db.execute_query(db_connection=db_connection, query=get_data)
         results = cursor.fetchall() #data from database.
-        cursor.close()
+        
 
         return render_template("movement_types.j2", data=results)
 
@@ -360,7 +360,7 @@ def training_types():
     get_data = "SELECT distinct trainingType FROM TrainingTypes WHERE TrainingTypes.trainingType != 'None' "
     cursor = db.execute_query(db_connection=db_connection, query=get_data)
     results = cursor.fetchall() #data from database.
-    cursor.close()
+    
 
     return render_template("training_types.j2", data=results)
 
@@ -374,7 +374,7 @@ def search_training():
         get_data = "SELECT trainingType FROM TrainingTypes WHERE TrainingTypes.trainingType = '%s' "  % (search_bar)
         cursor = db.execute_query(db_connection=db_connection, query=get_data)
         results = cursor.fetchall() #data from database.
-        cursor.close()
+        
 
         return render_template("training_types.j2", data=results)
 
@@ -489,7 +489,7 @@ def update(id):
     WHERE Exercises.exerciseId = %s" % (id)
     cursor = db.execute_query(db_connection=db_connection, query=get_training)
     training_results = cursor.fetchall() #data from database.
-    cursor.close()
+    
 
     get_movement = "SELECT MovementTypes.movementType, MovementTypes.movementId FROM MovementTypes INNER JOIN ExerciseMovements \
     ON ExerciseMovements.movementId = MovementTypes.movementId \
@@ -498,7 +498,7 @@ def update(id):
     WHERE Exercises.exerciseId = %s" % (id)
     cursor = db.execute_query(db_connection=db_connection, query=get_movement)
     movement_results = cursor.fetchall() #data from database.
-    cursor.close()
+    
 
     get_muscle = "SELECT MuscleGroups.muscleGroup, MuscleGroups.muscleId FROM MuscleGroups INNER JOIN ExerciseMuscles \
     ON ExerciseMuscles.muscleId = MuscleGroups.muscleId \
@@ -507,7 +507,7 @@ def update(id):
     WHERE Exercises.exerciseId = %s" % (id)
     cursor = db.execute_query(db_connection=db_connection, query=get_muscle)
     muscle_results = cursor.fetchall() #data from database.
-    cursor.close()
+    
 
 
     # a row from table 
@@ -533,7 +533,7 @@ def update(id):
         return "NOT FOUND"
 
     final_results = extractRow(results_row)
-    cursor.close()
+    
 
     #a_query = "SELECT exerciseId, exerciseName FROM Exercises"
     #cursor = db.execute_query(db_connection=db_connection, query=a_query)
