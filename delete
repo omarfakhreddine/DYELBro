@@ -1,8 +1,0 @@
-    
-    SELECT Exercises.exerciseName, TrainingTypes.trainingType 
-    FROM TrainingTypes 
-    INNER JOIN ExerciseTrainings ON 
-    TrainingTypes.trainingId = ExerciseTrainings.trainingId
-    INNER JOIN Exercises ON 
-    Exercises.exerciseId = ExerciseTrainings.exerciseId WHERE Exercises.exerciseId = 4;
-  
